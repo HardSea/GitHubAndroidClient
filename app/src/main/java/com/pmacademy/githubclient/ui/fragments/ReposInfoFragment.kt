@@ -3,12 +3,11 @@ package com.pmacademy.githubclient.ui.fragments
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.ui.base.BaseFragment
 
-class IssueCommentsFragment: BaseFragment(R.layout.comments_issue_fragment) {
-
+class ReposInfoFragment: BaseFragment(R.layout.project_info_fragment) {
 
     companion object {
-        fun newInstance(): IssueCommentsFragment {
-            return IssueCommentsFragment()
+        fun newInstance(): ReposInfoFragment {
+            return ReposInfoFragment()
         }
     }
 }

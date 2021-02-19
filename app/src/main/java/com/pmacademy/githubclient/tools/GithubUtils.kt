@@ -3,9 +3,10 @@ package com.pmacademy.githubclient.tools
 import android.net.Uri
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.pmacademy.githubclient.data.api.GitHubServiceApi
-import com.pmacademy.githubclient.data.model.AccessToken
-import com.pmacademy.myapplicationtemp.data.Repos
-import com.pmacademy.myapplicationtemp.data.User
+import com.pmacademy.githubclient.data.model.AccessTokenResponse
+import com.pmacademy.githubclient.data.model.IssueResponse
+import com.pmacademy.myapplicationtemp.data.ReposResponse
+import com.pmacademy.githubclient.data.model.UserResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
@@ -72,16 +73,26 @@ class GithubUtils {
         return uri.getQueryParameter("code")
     }
 
-    suspend fun getAccessToken(code: String): AccessToken {
+    suspend fun getAccessToken(code: String): AccessTokenResponse {
         return loginGithubService.getAccessToken(clientId, clientSecret, code)
     }
 
-    suspend fun getUser(token: String): User {
+    suspend fun getUser(token: String): UserResponse {
         return apiGithubService.getUser(token)
     }
 
-    suspend fun getUserRepos(token: String): List<Repos> {
-        return apiGithubService.getUserRepos(token)
+    suspend fun getListUserRepos(username: String): List<ReposResponse> {
+        return apiGithubService.getListUserRepos(username)
     }
+
+    suspend fun getReposContributors(owner: String, repo: String): List<UserResponse> {
+        return apiGithubService.getReposContributors(owner = owner, repo = repo)
+    }
+
+    suspend fun getReposIssues(owner: String, repo: String): List<IssueResponse> {
+        return apiGithubService.getReposIssues(owner = owner, repo = repo)
+    }
+
+
 
 }

@@ -1,7 +1,10 @@
-package com.pmacademy.githubclient.ui.fragments
+package com.pmacademy.githubclient.ui
 
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
+import com.pmacademy.githubclient.ui.fragments.*
+import com.pmacademy.githubclient.data.model.UserResponse
+import kotlinx.serialization.ExperimentalSerializationApi
 
 class FragmentNavigator(
     private val fragmentManager: FragmentManager,
@@ -23,21 +26,22 @@ class FragmentNavigator(
 
     fun showProjectInfoFragment() {
         fragmentManager.beginTransaction()
-            .replace(container, ProjectInfoFragment.newInstance())
+            .replace(container, ReposInfoFragment.newInstance())
             .addToBackStack(null)
             .commit()
     }
 
     fun showProjectIssuesFragment() {
         fragmentManager.beginTransaction()
-            .replace(container, ProjectIssuesFragment.newInstance())
+            .replace(container, ReposIssuesFragment.newInstance())
             .addToBackStack(null)
             .commit()
     }
 
-    fun showUserInfoFragment() {
+    @ExperimentalSerializationApi
+    fun showUserInfoFragment(user: UserResponse) {
         fragmentManager.beginTransaction()
-            .replace(container, UserInfoFragment.newInstance())
+            .replace(container, UserInfoFragment.newInstance(user))
             .addToBackStack(null)
             .commit()
     }
