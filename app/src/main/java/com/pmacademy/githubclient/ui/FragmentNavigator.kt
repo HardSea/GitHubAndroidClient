@@ -4,8 +4,10 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
 import com.pmacademy.githubclient.ui.fragments.*
 import com.pmacademy.githubclient.data.model.UserResponse
+import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 
+@ExperimentalSerializationApi
 class FragmentNavigator(
     private val fragmentManager: FragmentManager,
     @IdRes private val container: Int,
@@ -24,9 +26,9 @@ class FragmentNavigator(
             .commit()
     }
 
-    fun showProjectInfoFragment() {
+    fun showProjectInfoFragment(reposName: String, userName: String) {
         fragmentManager.beginTransaction()
-            .replace(container, ReposInfoFragment.newInstance())
+            .replace(container, ReposInfoFragment.newInstance(reposName, userName))
             .addToBackStack(null)
             .commit()
     }
@@ -38,7 +40,6 @@ class FragmentNavigator(
             .commit()
     }
 
-    @ExperimentalSerializationApi
     fun showUserInfoFragment(user: UserResponse) {
         fragmentManager.beginTransaction()
             .replace(container, UserInfoFragment.newInstance(user))

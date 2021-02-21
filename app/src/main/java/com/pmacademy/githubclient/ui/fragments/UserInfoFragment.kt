@@ -20,7 +20,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalSerializationApi
 class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
-    private val recyclerViewPostsAdapter = ReposListAdapter()
+    private val recyclerViewPostsAdapter =
+        ReposListAdapter { reposName -> navigator.showProjectInfoFragment(reposName, user.login) }
     private lateinit var binding: UserInfoFragmentBinding
     private val viewModel: UserInfoViewModel by viewModels()
     private lateinit var user: UserResponse
@@ -37,10 +38,10 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getUserReposList(user)
-        initRecyclerView()
         observeRepos()
+        viewModel.getUserReposList(user)
         loadAvatar(user.avatarUrl)
+        initRecyclerView()
         setUserName()
     }
 

@@ -4,6 +4,7 @@ import android.net.Uri
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.pmacademy.githubclient.data.model.AccessTokenResponse
 import com.pmacademy.githubclient.data.model.IssueResponse
+import com.pmacademy.githubclient.data.model.ReposInfoResponse
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
@@ -91,6 +92,17 @@ class GithubUtils {
     suspend fun getListUserRepos(username: String): Result<List<ReposResponse>, GithubError> {
         return try {
             Result.success(apiGithubService.getListUserRepos(username))
+        } catch (e: Exception) {
+            githubInterceptor.getError(e)
+        }
+    }
+
+    suspend fun getRepoInfo(
+        owner: String,
+        repo: String
+    ): Result<ReposInfoResponse, GithubError> {
+        return try {
+            Result.success(apiGithubService.getRepoInfo(owner = owner, repo = repo))
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }

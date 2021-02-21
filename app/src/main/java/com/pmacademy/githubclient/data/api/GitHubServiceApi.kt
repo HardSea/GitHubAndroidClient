@@ -2,6 +2,7 @@ package com.pmacademy.githubclient.data.api
 
 import com.pmacademy.githubclient.data.model.AccessTokenResponse
 import com.pmacademy.githubclient.data.model.IssueResponse
+import com.pmacademy.githubclient.data.model.ReposInfoResponse
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 import retrofit2.http.*
@@ -27,6 +28,13 @@ interface GitHubServiceApi {
     suspend fun getListUserRepos(
         @Path("username") username: String
     ): List<ReposResponse>
+
+    @Headers("Accept: application/vnd.github.v3+json")
+    @GET("/repos/{owner}/{repo}")
+    suspend fun getRepoInfo(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): ReposInfoResponse
 
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}/issues")
