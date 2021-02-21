@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.pmacademy.githubclient.R
+import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.UserInfoFragmentBinding
+import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.ReposListAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import com.pmacademy.githubclient.ui.viewmodel.UserInfoViewModel
 import com.pmacademy.myapplicationtemp.data.ReposResponse
-import com.pmacademy.githubclient.data.model.UserResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalSerializationApi
@@ -38,6 +40,19 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         viewModel.getUserReposList(user)
         initRecyclerView()
         observeRepos()
+        loadAvatar(user.avatarUrl)
+        setUserName()
+    }
+
+    private fun setUserName() {
+        binding.tvUserName.text = user.login
+    }
+
+    private fun loadAvatar(imageUrl: String) {
+        Glide.with(requireContext())
+            .load(imageUrl)
+            .circleCrop()
+            .into(binding.ivUserAvatar)
     }
 
     private fun initRecyclerView() {
@@ -49,10 +64,22 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         recyclerViewPostsAdapter.updateReposList(items)
     }
 
+    private fun showErrorMessage(error: GithubError) {
+        binding.rvListRepositories.visibility = View.GONE
+        binding.ivUserAvatar.visibility = View.GONE
+        binding.tvUserName.visibility = View.GONE
+        binding.tvListRepositoriesText.visibility = View.GONE
+
+        binding.tvErrorMessage.visibility = View.VISIBLE
+        binding.tvErrorMessage.text = error.name
+    }
+
     private fun observeRepos() {
         viewModel.reposLiveData.observe(viewLifecycleOwner, {
-            if (it != null) {
-                updateReposList(it)
+            if (!it.isError) {
+                updateReposList(it.successResult)
+            } else {
+                showErrorMessage(it.errorResult)
             }
         })
     }

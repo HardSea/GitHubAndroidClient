@@ -2,8 +2,8 @@ package com.pmacademy.githubclient.data.api
 
 import com.pmacademy.githubclient.data.model.AccessTokenResponse
 import com.pmacademy.githubclient.data.model.IssueResponse
-import com.pmacademy.myapplicationtemp.data.ReposResponse
 import com.pmacademy.githubclient.data.model.UserResponse
+import com.pmacademy.myapplicationtemp.data.ReposResponse
 import retrofit2.http.*
 
 interface GitHubServiceApi {
@@ -21,10 +21,7 @@ interface GitHubServiceApi {
     @GET("/user")
     suspend fun getUser(@Header("Authorization") auth: String): UserResponse
 
-//    @Headers("Accept: application/vnd.github.v3+json")
-//    @GET("/user/repos")
-//    suspend fun getListUserRepos(@Header("Authorization") auth: String): List<ReposResponse>
-
+    //TODO: add option for sort
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/users/{username}/repos")
     suspend fun getListUserRepos(
@@ -44,5 +41,4 @@ interface GitHubServiceApi {
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): List<UserResponse>
-
 }
