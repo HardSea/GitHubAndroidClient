@@ -2,4 +2,12 @@
     <string name="app_name">GitHub Client</string>
     <string name="user_avatar_description">User avatar</string>
     <string name="text_readme_empty">Readme are empty</string>
+    <string name="like_text">👍</string>
+    <string name="dislike_text">👎</string>
+    <string name="laught_text">😄</string>
+    <string name="confused_text">😕</string>
+    <string name="heart_text">❤</string>
+    <string name="hooray_text">🎉</string>
+    <string name="rocket_text">🚀</string>
+    <string name="eyes_text">👀</string>
 </resources>
