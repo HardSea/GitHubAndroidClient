@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
-import com.pmacademy.githubclient.data.pref.SharedPref
 import com.pmacademy.githubclient.databinding.UserInfoFragmentBinding
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.ReposListAdapter
@@ -44,6 +43,8 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         loadAvatar(user.avatarUrl)
         initRecyclerView()
         setUserName()
+
+
     }
 
     private fun setUserName() {
@@ -78,11 +79,8 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
     private fun observeReposLiveData() {
         viewModel.reposLiveData.observe(viewLifecycleOwner, {
-            if (it.isError) {
-                showErrorMessage(it.errorResult)
-            } else {
-                updateReposList(it.successResult)
-            }
+            if (it.isError) showErrorMessage(it.errorResult)
+            else updateReposList(it.successResult)
         })
     }
 

@@ -6,8 +6,9 @@ import retrofit2.http.*
 
 interface GitHubServiceApi {
 
+
     @Headers("Accept: application/json")
-    @POST("login/oauth/access_token")
+    @POST("/login/oauth/access_token")
     @FormUrlEncoded
     suspend fun getAccessToken(
         @Field("client_id") clientId: String,
@@ -60,4 +61,14 @@ interface GitHubServiceApi {
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): List<UserResponse>
+
+    @Headers("Accept: application/vnd.github.squirrel-girl-preview")
+    @POST("/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions")
+    suspend fun createReactionForIssueComment(
+        @Header("Authorization") auth: String,
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Path("comment_id") commentId: Int,
+        @Body reactions: String
+    )
 }

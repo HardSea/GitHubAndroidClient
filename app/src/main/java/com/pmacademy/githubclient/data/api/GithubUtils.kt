@@ -1,6 +1,7 @@
 package com.pmacademy.githubclient.data.api
 
 import android.net.Uri
+import android.util.Log
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.githubclient.tools.GithubError
@@ -19,10 +20,10 @@ import retrofit2.Retrofit
 class GithubUtils {
 
     private companion object {
-        const val clientId = "Iv1.2a4082c0aa5cda51"
-        const val clientSecret = "69b0c483062b458caa835bb584b9878faf38a2e2"
+        const val clientId = "4c730b7299ec5bf137ae"
+        const val clientSecret = "27893f6c73800e60a2b0ad05f388335824f88811"
         const val redirectUrl = "androidgithubclient://callback"
-        const val scopes = "repo, user"
+        const val scopes = "repo user admin workflow"
         const val schema = "https"
         const val loginHost = "github.com"
         const val apiHost = "api.github.com"
@@ -75,6 +76,7 @@ class GithubUtils {
     }
 
     suspend fun getAccessToken(code: String): AccessTokenResponse {
+        Log.d("TAG333", "getAccessToken: $code")
         return loginGithubService.getAccessToken(clientId, clientSecret, code)
     }
 
@@ -86,7 +88,10 @@ class GithubUtils {
         }
     }
 
-    suspend fun getUserReposList(username: String, authToken: String): Result<List<ReposResponse>, GithubError> {
+    suspend fun getUserReposList(
+        username: String,
+        authToken: String
+    ): Result<List<ReposResponse>, GithubError> {
         return try {
             Result.success(apiGithubService.getListUserRepos(username = username, auth = authToken))
         } catch (e: Exception) {
@@ -120,7 +125,13 @@ class GithubUtils {
         authToken: String
     ): Result<RepoInfoResponse, GithubError> {
         return try {
-            Result.success(apiGithubService.getRepoInfo(owner = owner, repo = repo, auth = authToken))
+            Result.success(
+                apiGithubService.getRepoInfo(
+                    owner = owner,
+                    repo = repo,
+                    auth = authToken
+                )
+            )
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
@@ -132,7 +143,13 @@ class GithubUtils {
         authToken: String
     ): Result<List<UserResponse>, GithubError> {
         return try {
-            Result.success(apiGithubService.getReposContributors(owner = owner, repo = repo, auth = authToken))
+            Result.success(
+                apiGithubService.getReposContributors(
+                    owner = owner,
+                    repo = repo,
+                    auth = authToken
+                )
+            )
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
@@ -144,9 +161,37 @@ class GithubUtils {
         authToken: String
     ): Result<List<IssueResponse>, GithubError> {
         return try {
-            Result.success(apiGithubService.getReposIssues(owner = owner, repo = repo, auth = authToken))
+            Result.success(
+                apiGithubService.getReposIssues(
+                    owner = owner,
+                    repo = repo,
+                    auth = authToken
+                )
+            )
         } catch (e: Exception) {
             githubInterceptor.getError(e)
+        }
+    }
+
+    suspend fun createReactionForIssueComment(
+        owner: String,
+        repo: String,
+        authToken: String,
+        commentId: Int,
+        reactionString: String
+    ) {
+        try {
+                apiGithubService.createReactionForIssueComment(
+                    owner = owner,
+                    repo = repo,
+                    auth = authToken,
+                    commentId = commentId,
+                    reactions = reactionString
+                )
+
+        } catch (e: Exception) {
+            Log.d("TAG_ERROR", "createReactionForIssueComment: ERROR ${e.toString()}")
+            //githubInterceptor.getError(e)
         }
     }
 

@@ -2,6 +2,7 @@ package com.pmacademy.githubclient.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import com.pmacademy.githubclient.R
@@ -39,12 +40,18 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
             val response = githubUtils.getAccessToken(code)
             val token = "${response.tokenType} ${response.accessToken}"
             sharedPreferences.token = token
+
             user = githubUtils.getUser(token).successResult
-            sharedPreferences.localUserName = user.login
-            sharedPreferences.localUserAvatarUrl = user.avatarUrl
+
+            saveUserToSharedPreference()
             navigator.showUserInfoFragment(user, addToBackStack = false)
             requireActivity().intent.data = null
         }
+    }
+
+    private fun saveUserToSharedPreference() {
+        sharedPreferences.localUserName = user.login
+        sharedPreferences.localUserAvatarUrl = user.avatarUrl
     }
 
     override fun onResume() {
