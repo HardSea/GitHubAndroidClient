@@ -39,11 +39,9 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeReposLiveData()
-        viewModel.getUserReposList(user = user, authToken = sharedPreferences.token)
-        loadAvatar(user.avatarUrl)
         initRecyclerView()
         setUserName()
-
+        viewModel.getUserReposList(user = user, authToken = sharedPreferences.token)
 
     }
 
@@ -79,9 +77,25 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
     private fun observeReposLiveData() {
         viewModel.reposLiveData.observe(viewLifecycleOwner, {
-            if (it.isError) showErrorMessage(it.errorResult)
-            else updateReposList(it.successResult)
+            if (!it.isLoading) {
+                if (it.isError) {
+                    showErrorMessage(it.errorResult)
+                } else {
+                    updateReposList(it.successResult)
+                    loadAvatar(user.avatarUrl)
+                    showAllViewsHideProgressBar()
+                }
+            }
         })
+    }
+
+    private fun showAllViewsHideProgressBar() {
+        binding.tvUserName.visibility = View.VISIBLE
+        binding.tvListRepositoriesText.visibility = View.VISIBLE
+        binding.rvListRepositories.visibility = View.VISIBLE
+        binding.ivUserAvatar.visibility = View.VISIBLE
+
+        binding.progressBarLoading.visibility = View.GONE
     }
 
     companion object {

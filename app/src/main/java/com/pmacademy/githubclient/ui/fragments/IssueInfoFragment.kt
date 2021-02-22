@@ -1,11 +1,14 @@
 package com.pmacademy.githubclient.ui.fragments
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.IssueCommentResponse
@@ -56,6 +59,7 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
         binding.tvIssueAuthor.text = userName
         binding.tvIssueTitle.text = issue.title
         binding.tvIssueBody.text = issue.body
+        binding.tvIssueBody.movementMethod = ScrollingMovementMethod()
     }
 
 
@@ -65,9 +69,19 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
                 //showErrorMessage(it.errorResult)
             } else {
                 updateIssueCommentsList(it.successResult)
+                showAllViewsHideProgressBar()
             }
         })
 
+    }
+
+    private fun showAllViewsHideProgressBar() {
+        binding.tvIssueBody.visibility = View.VISIBLE
+        binding.tvIssueTitle.visibility = View.VISIBLE
+        binding.tvIssueAuthor.visibility = View.VISIBLE
+        binding.rvIssueComments.visibility = View.VISIBLE
+
+        binding.progressBarLoading.visibility = View.GONE
     }
 
     private fun updateIssueCommentsList(commentsList: List<IssueCommentResponse>) {
@@ -77,6 +91,12 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
     private fun initRecyclerView() {
         binding.rvIssueComments.adapter = rvIssueCommentsAdapter
         binding.rvIssueComments.layoutManager = LinearLayoutManager(requireContext())
+        val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+        val drawableRes = getDrawable(requireContext(), R.drawable.divider)
+        if (drawableRes != null) {
+            itemDecoration.setDrawable(drawableRes)
+            binding.rvIssueComments.addItemDecoration(itemDecoration)
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.pmacademy.githubclient.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,14 +19,14 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalSerializationApi
 class ReposInfoViewModel : ViewModel() {
 
-    private val _repoInfoLiveData = MutableLiveData<Result<RepoInfoResponse, GithubError>>()
     private val _contributorsLiveData = MutableLiveData<Result<List<UserResponse>, GithubError>>()
     private val _issuesLiveData = MutableLiveData<Result<List<IssueResponse>, GithubError>>()
+    private val _readmeLiveData = MutableLiveData<Result<String, GithubError>>()
 
-    val repoInfoLiveData: LiveData<Result<RepoInfoResponse, GithubError>> = _repoInfoLiveData
     val contributorsLiveData: LiveData<Result<List<UserResponse>, GithubError>> =
         _contributorsLiveData
     val issuesLiveData: LiveData<Result<List<IssueResponse>, GithubError>> = _issuesLiveData
+    val readmeLiveData: LiveData<Result<String, GithubError>> = _readmeLiveData
 
     private val githubUtils: GithubUtils by lazy {
         GithubUtils()
@@ -34,8 +35,6 @@ class ReposInfoViewModel : ViewModel() {
 
     fun getRepoInfo(repoName: String, userName: String, authToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val repoInfo =
-                githubUtils.getRepoInfo(owner = userName, repo = repoName, authToken = authToken)
             val contributorsList = githubUtils.getReposContributors(
                 owner = userName,
                 repo = repoName,
@@ -44,10 +43,13 @@ class ReposInfoViewModel : ViewModel() {
             val issueList =
                 githubUtils.getReposIssues(owner = userName, repo = repoName, authToken = authToken)
 
+            val readmeText =
+                githubUtils.getRepoReadme(owner = userName, repo = repoName, authToken = authToken)
+            Log.d("TAG333", "getRepoInfo: $readmeText")
             withContext(Dispatchers.Main) {
-                _repoInfoLiveData.value = repoInfo
                 _contributorsLiveData.value = contributorsList
                 _issuesLiveData.value = issueList
+                _readmeLiveData.value = readmeText
             }
         }
     }

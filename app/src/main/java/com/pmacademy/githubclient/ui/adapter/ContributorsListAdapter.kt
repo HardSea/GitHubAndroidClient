@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
-import com.pmacademy.myapplicationtemp.data.ReposResponse
 
 
 private class ContributorItemDiffCallback : DiffUtil.ItemCallback<UserResponse>() {
@@ -22,7 +21,7 @@ private class ContributorItemDiffCallback : DiffUtil.ItemCallback<UserResponse>(
     }
 }
 
-class ContributorsListAdapter() :
+class ContributorsListAdapter(private val contributorClickListener: (UserResponse) -> Unit) :
     ListAdapter<UserResponse, RecyclerView.ViewHolder>(ContributorItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -34,7 +33,10 @@ class ContributorsListAdapter() :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ContributorsListViewHolder -> holder.bind(getItem(position).login)
+            is ContributorsListViewHolder -> holder.bind(
+                getItem(position),
+                contributorClickListener
+            )
         }
     }
 
@@ -50,8 +52,11 @@ class ContributorsListAdapter() :
             tvContributorName = view.findViewById(R.id.tv_contributor_name)
         }
 
-        fun bind(contributorName: String) {
-            tvContributorName?.text = contributorName
+        fun bind(contributorUser: UserResponse, onContributorClick: (UserResponse) -> Unit) {
+            tvContributorName?.text = contributorUser.login
+            itemView.setOnClickListener {
+                onContributorClick.invoke(contributorUser)
+            }
         }
     }
 

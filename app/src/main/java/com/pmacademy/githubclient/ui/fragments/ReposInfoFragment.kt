@@ -1,7 +1,9 @@
 package com.pmacademy.githubclient.ui.fragments
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +24,9 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
     private lateinit var userName: String
     private lateinit var binding: RepositoryInfoFragmentBinding
     private val viewModel: ReposInfoViewModel by viewModels()
-    private val contributorsListAdapter = ContributorsListAdapter()
+    private val contributorsListAdapter = ContributorsListAdapter { user ->
+        navigator.showUserInfoFragment(user)
+    }
     private val issuesListAdapter = IssueListAdapter { issueResponse ->
         navigator.showIssueInfoFragment(
             issue = issueResponse,
@@ -62,13 +66,6 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
     }
 
     private fun observeLiveData() {
-        viewModel.repoInfoLiveData.observe(viewLifecycleOwner, { reposInfoResponse ->
-            if (reposInfoResponse.isError) {
-                Log.d("TAG111", "ERROR")
-            } else {
-                showReadme(reposInfoResponse.successResult.description)
-            }
-        })
         viewModel.contributorsLiveData.observe(viewLifecycleOwner, { contributorsList ->
             if (contributorsList.isError) {
                 Log.d("TAG111", "ERROR")
@@ -83,16 +80,38 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
                 issuesListAdapter.updateIssuesList(issuesList.successResult)
             }
         })
-
+        viewModel.readmeLiveData.observe(viewLifecycleOwner, { readmeText ->
+            if (readmeText.isError) {
+                Log.d("TAG111", "ERROR")
+                showReadmeError()
+            } else {
+                showReadme(readmeText.successResult)
+            }
+            showAllViewsHideProgressBar()
+        })
     }
 
-    private fun showReadme(description: String?) {
-        if (description == null) {
-            binding.tvReadme.text = getString(R.string.text_readme_empty)
-        } else {
-            binding.tvReadmeText.text = description
-        }
+    private fun showAllViewsHideProgressBar() {
+        binding.tvReadme.visibility = View.VISIBLE
+        binding.tvReposName.visibility = View.VISIBLE
+        binding.tvReadmeText.visibility = View.VISIBLE
+        binding.tvContributorsListText.visibility = View.VISIBLE
+        binding.tvIssuesListText.visibility = View.VISIBLE
+        binding.rvIssuesList.visibility = View.VISIBLE
+        binding.rvContributorsList.visibility = View.VISIBLE
 
+        binding.progressBarLoading.visibility = View.GONE
+    }
+
+    private fun showReadmeError() {
+        binding.tvReadme.text = getString(R.string.text_readme_empty)
+        binding.tvReadme.gravity = Gravity.CENTER
+    }
+
+
+    private fun showReadme(readme: String) {
+        binding.tvReadme.text = readme
+        binding.tvReadme.movementMethod = ScrollingMovementMethod()
     }
 
     companion object {

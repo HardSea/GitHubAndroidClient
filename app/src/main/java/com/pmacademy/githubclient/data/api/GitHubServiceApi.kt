@@ -46,6 +46,13 @@ interface GitHubServiceApi {
         @Path("repo") repo: String
     ): RepoInfoResponse
 
+    @GET("/repos/{owner}/{repo}/contents/README.md")
+    suspend fun getRepoReadme(
+        @Header("Authorization") auth: String,
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+    ): ReadmeResponse
+
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}/issues")
     suspend fun getReposIssues(

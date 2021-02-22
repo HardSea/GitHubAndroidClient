@@ -6,6 +6,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
+import com.pmacademy.githubclient.tools.StringDecoder
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -137,6 +138,25 @@ class GithubUtils {
         }
     }
 
+    suspend fun getRepoReadme(
+        owner: String,
+        repo: String,
+        authToken: String
+    ): Result<String, GithubError> {
+        return try {
+            val readme = apiGithubService.getRepoReadme(
+                owner = owner,
+                repo = repo,
+                auth = authToken
+            )
+            val encodeReadme = StringDecoder().decodeText(readme.content, readme.encoding)
+            Log.d("TAGreadme", "getRepoReadme: $encodeReadme")
+            return Result.success(encodeReadme)
+        } catch (e: Exception) {
+            githubInterceptor.getError(e)
+        }
+    }
+
     suspend fun getReposContributors(
         owner: String,
         repo: String,
@@ -181,13 +201,13 @@ class GithubUtils {
         reactionString: String
     ) {
         try {
-                apiGithubService.createReactionForIssueComment(
-                    owner = owner,
-                    repo = repo,
-                    auth = authToken,
-                    commentId = commentId,
-                    reactions = reactionString
-                )
+            apiGithubService.createReactionForIssueComment(
+                owner = owner,
+                repo = repo,
+                auth = authToken,
+                commentId = commentId,
+                reactions = reactionString
+            )
 
         } catch (e: Exception) {
             Log.d("TAG_ERROR", "createReactionForIssueComment: ERROR ${e.toString()}")
