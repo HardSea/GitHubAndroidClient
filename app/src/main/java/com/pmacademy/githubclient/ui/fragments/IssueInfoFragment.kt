@@ -45,7 +45,8 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
         viewModel.getIssueComments(
             userName = userName,
             repoName = repoName,
-            issueNumber = issue.number
+            issueNumber = issue.number,
+            authToken = sharedPreferences.token
         )
         setupView()
     }

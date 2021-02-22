@@ -86,9 +86,9 @@ class GithubUtils {
         }
     }
 
-    suspend fun getUserReposList(username: String): Result<List<ReposResponse>, GithubError> {
+    suspend fun getUserReposList(username: String, authToken: String): Result<List<ReposResponse>, GithubError> {
         return try {
-            Result.success(apiGithubService.getListUserRepos(username))
+            Result.success(apiGithubService.getListUserRepos(username = username, auth = authToken))
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
@@ -97,14 +97,16 @@ class GithubUtils {
     suspend fun getIssueCommentsList(
         issueNumber: Int,
         owner: String,
-        repo: String
+        repo: String,
+        authToken: String
     ): Result<List<IssueCommentResponse>, GithubError> {
         return try {
             Result.success(
                 apiGithubService.getIssueCommentsList(
                     issueNumber = issueNumber,
                     owner = owner,
-                    repo = repo
+                    repo = repo,
+                    auth = authToken
                 )
             )
         } catch (e: Exception) {
@@ -114,10 +116,11 @@ class GithubUtils {
 
     suspend fun getRepoInfo(
         owner: String,
-        repo: String
+        repo: String,
+        authToken: String
     ): Result<RepoInfoResponse, GithubError> {
         return try {
-            Result.success(apiGithubService.getRepoInfo(owner = owner, repo = repo))
+            Result.success(apiGithubService.getRepoInfo(owner = owner, repo = repo, auth = authToken))
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
@@ -125,10 +128,11 @@ class GithubUtils {
 
     suspend fun getReposContributors(
         owner: String,
-        repo: String
+        repo: String,
+        authToken: String
     ): Result<List<UserResponse>, GithubError> {
         return try {
-            Result.success(apiGithubService.getReposContributors(owner = owner, repo = repo))
+            Result.success(apiGithubService.getReposContributors(owner = owner, repo = repo, auth = authToken))
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
@@ -136,10 +140,11 @@ class GithubUtils {
 
     suspend fun getReposIssues(
         owner: String,
-        repo: String
+        repo: String,
+        authToken: String
     ): Result<List<IssueResponse>, GithubError> {
         return try {
-            Result.success(apiGithubService.getReposIssues(owner = owner, repo = repo))
+            Result.success(apiGithubService.getReposIssues(owner = owner, repo = repo, auth = authToken))
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }

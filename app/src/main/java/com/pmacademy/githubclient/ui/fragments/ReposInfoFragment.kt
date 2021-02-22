@@ -46,7 +46,11 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
         super.onViewCreated(view, savedInstanceState)
         observeLiveData()
         binding.tvReposName.text = repoName
-        viewModel.getRepoInfo(repoName = repoName, userName = userName)
+        viewModel.getRepoInfo(
+            repoName = repoName,
+            userName = userName,
+            authToken = sharedPreferences.token
+        )
         initRecyclerViews()
     }
 

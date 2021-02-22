@@ -24,10 +24,10 @@ class IssueCommentsViewModel : ViewModel() {
         GithubUtils()
     }
 
-    fun getIssueComments(userName: String, repoName: String, issueNumber: Int) {
+    fun getIssueComments(userName: String, repoName: String, issueNumber: Int, authToken: String) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            val repos = githubUtils.getIssueCommentsList(owner = userName, repo = repoName, issueNumber = issueNumber)
+            val repos = githubUtils.getIssueCommentsList(owner = userName, repo = repoName, issueNumber = issueNumber, authToken = authToken)
 
             withContext(Dispatchers.Main) {
                 _issueCommentsLiveData.value = repos

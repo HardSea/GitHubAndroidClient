@@ -23,12 +23,14 @@ interface GitHubServiceApi {
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/users/{username}/repos")
     suspend fun getListUserRepos(
+        @Header("Authorization") auth: String,
         @Path("username") username: String
     ): List<ReposResponse>
 
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}/issues/{issue_number}/comments")
     suspend fun getIssueCommentsList(
+        @Header("Authorization") auth: String,
         @Path("owner") owner: String,
         @Path("repo") repo: String,
         @Path("issue_number") issueNumber: Int
@@ -38,6 +40,7 @@ interface GitHubServiceApi {
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}")
     suspend fun getRepoInfo(
+        @Header("Authorization") auth: String,
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): RepoInfoResponse
@@ -45,6 +48,7 @@ interface GitHubServiceApi {
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}/issues")
     suspend fun getReposIssues(
+        @Header("Authorization") auth: String,
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): List<IssueResponse>
@@ -52,6 +56,7 @@ interface GitHubServiceApi {
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}/contributors")
     suspend fun getReposContributors(
+        @Header("Authorization") auth: String,
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): List<UserResponse>

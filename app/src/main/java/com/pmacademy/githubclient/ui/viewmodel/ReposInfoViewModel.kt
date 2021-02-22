@@ -23,7 +23,8 @@ class ReposInfoViewModel : ViewModel() {
     private val _issuesLiveData = MutableLiveData<Result<List<IssueResponse>, GithubError>>()
 
     val repoInfoLiveData: LiveData<Result<RepoInfoResponse, GithubError>> = _repoInfoLiveData
-    val contributorsLiveData: LiveData<Result<List<UserResponse>, GithubError>> = _contributorsLiveData
+    val contributorsLiveData: LiveData<Result<List<UserResponse>, GithubError>> =
+        _contributorsLiveData
     val issuesLiveData: LiveData<Result<List<IssueResponse>, GithubError>> = _issuesLiveData
 
     private val githubUtils: GithubUtils by lazy {
@@ -31,11 +32,17 @@ class ReposInfoViewModel : ViewModel() {
     }
 
 
-    fun getRepoInfo(repoName: String, userName: String) {
+    fun getRepoInfo(repoName: String, userName: String, authToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val repoInfo = githubUtils.getRepoInfo(owner = userName, repo = repoName)
-            val contributorsList = githubUtils.getReposContributors(owner = userName, repo = repoName)
-            val issueList = githubUtils.getReposIssues(owner = userName, repo = repoName)
+            val repoInfo =
+                githubUtils.getRepoInfo(owner = userName, repo = repoName, authToken = authToken)
+            val contributorsList = githubUtils.getReposContributors(
+                owner = userName,
+                repo = repoName,
+                authToken = authToken
+            )
+            val issueList =
+                githubUtils.getReposIssues(owner = userName, repo = repoName, authToken = authToken)
 
             withContext(Dispatchers.Main) {
                 _repoInfoLiveData.value = repoInfo

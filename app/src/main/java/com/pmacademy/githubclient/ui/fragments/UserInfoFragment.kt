@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
+import com.pmacademy.githubclient.data.pref.SharedPref
 import com.pmacademy.githubclient.databinding.UserInfoFragmentBinding
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.ReposListAdapter
@@ -39,7 +40,7 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeReposLiveData()
-        viewModel.getUserReposList(user)
+        viewModel.getUserReposList(user = user, authToken = sharedPreferences.token)
         loadAvatar(user.avatarUrl)
         initRecyclerView()
         setUserName()

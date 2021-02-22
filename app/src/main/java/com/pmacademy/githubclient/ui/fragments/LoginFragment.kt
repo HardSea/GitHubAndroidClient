@@ -16,10 +16,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalSerializationApi
 class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
-    private val sharedPreferences by lazy {
-        SharedPref(requireActivity())
-    }
-
     private lateinit var user: UserResponse
 
     private val githubUtils: GithubUtils by lazy {
