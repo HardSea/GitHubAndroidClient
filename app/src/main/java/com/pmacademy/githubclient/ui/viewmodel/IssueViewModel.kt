@@ -1,8 +1,8 @@
 package com.pmacademy.githubclient.ui.viewmodel
 
-import com.pmacademy.githubclient.ui.base.BaseViewModel
+import androidx.lifecycle.ViewModel
 
-class IssueViewModel: BaseViewModel() {
+class IssueViewModel: ViewModel() {
 
 
 }

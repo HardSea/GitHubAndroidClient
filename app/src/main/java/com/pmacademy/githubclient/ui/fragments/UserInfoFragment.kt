@@ -20,7 +20,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalSerializationApi
 class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
-    private val recyclerViewPostsAdapter =
+    private val rvPostsAdapter =
         ReposListAdapter { reposName -> navigator.showProjectInfoFragment(reposName, user.login) }
     private lateinit var binding: UserInfoFragmentBinding
     private val viewModel: UserInfoViewModel by viewModels()
@@ -38,7 +38,7 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeRepos()
+        observeReposLiveData()
         viewModel.getUserReposList(user)
         loadAvatar(user.avatarUrl)
         initRecyclerView()
@@ -57,12 +57,12 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
     }
 
     private fun initRecyclerView() {
-        binding.rvListRepositories.adapter = recyclerViewPostsAdapter
+        binding.rvListRepositories.adapter = rvPostsAdapter
         binding.rvListRepositories.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun updateReposList(items: List<ReposResponse>) {
-        recyclerViewPostsAdapter.updateReposList(items)
+        rvPostsAdapter.updateReposList(items)
     }
 
     private fun showErrorMessage(error: GithubError) {
@@ -75,12 +75,12 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         binding.tvErrorMessage.text = error.name
     }
 
-    private fun observeRepos() {
+    private fun observeReposLiveData() {
         viewModel.reposLiveData.observe(viewLifecycleOwner, {
-            if (!it.isError) {
-                updateReposList(it.successResult)
-            } else {
+            if (it.isError) {
                 showErrorMessage(it.errorResult)
+            } else {
+                updateReposList(it.successResult)
             }
         })
     }

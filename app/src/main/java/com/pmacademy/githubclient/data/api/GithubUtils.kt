@@ -2,10 +2,7 @@ package com.pmacademy.githubclient.data.api
 
 import android.net.Uri
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.pmacademy.githubclient.data.model.AccessTokenResponse
-import com.pmacademy.githubclient.data.model.IssueResponse
-import com.pmacademy.githubclient.data.model.ReposInfoResponse
-import com.pmacademy.githubclient.data.model.UserResponse
+import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
 import com.pmacademy.myapplicationtemp.data.ReposResponse
@@ -89,9 +86,27 @@ class GithubUtils {
         }
     }
 
-    suspend fun getListUserRepos(username: String): Result<List<ReposResponse>, GithubError> {
+    suspend fun getUserReposList(username: String): Result<List<ReposResponse>, GithubError> {
         return try {
             Result.success(apiGithubService.getListUserRepos(username))
+        } catch (e: Exception) {
+            githubInterceptor.getError(e)
+        }
+    }
+
+    suspend fun getIssueCommentsList(
+        issueNumber: Int,
+        owner: String,
+        repo: String
+    ): Result<List<IssueCommentResponse>, GithubError> {
+        return try {
+            Result.success(
+                apiGithubService.getIssueCommentsList(
+                    issueNumber = issueNumber,
+                    owner = owner,
+                    repo = repo
+                )
+            )
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
@@ -100,7 +115,7 @@ class GithubUtils {
     suspend fun getRepoInfo(
         owner: String,
         repo: String
-    ): Result<ReposInfoResponse, GithubError> {
+    ): Result<RepoInfoResponse, GithubError> {
         return try {
             Result.success(apiGithubService.getRepoInfo(owner = owner, repo = repo))
         } catch (e: Exception) {

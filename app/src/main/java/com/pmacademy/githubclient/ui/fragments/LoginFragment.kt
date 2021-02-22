@@ -2,7 +2,6 @@ package com.pmacademy.githubclient.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import com.pmacademy.githubclient.R
@@ -45,7 +44,8 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
             val token = "${response.tokenType} ${response.accessToken}"
             sharedPreferences.token = token
             user = githubUtils.getUser(token).successResult
-            Log.d(TAG, "saveUserToken: $user")
+            sharedPreferences.localUserName = user.login
+            sharedPreferences.localUserAvatarUrl = user.avatarUrl
             navigator.showUserInfoFragment(user)
             requireActivity().intent.data = null
         }

@@ -5,32 +5,34 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pmacademy.githubclient.data.api.GithubUtils
+import com.pmacademy.githubclient.data.model.IssueCommentResponse
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
-import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalSerializationApi
-class UserInfoViewModel : ViewModel() {
+class IssueCommentsViewModel : ViewModel() {
 
-    private val _reposLiveData = MutableLiveData<Result<List<ReposResponse>, GithubError>>()
-    val reposLiveData: LiveData<Result<List<ReposResponse>, GithubError>> = _reposLiveData
+    private val _issueCommentsLiveData = MutableLiveData<Result<List<IssueCommentResponse>, GithubError>>()
+    val issueCommentsLiveData: LiveData<Result<List<IssueCommentResponse>, GithubError>> = _issueCommentsLiveData
 
     private val githubUtils: GithubUtils by lazy {
         GithubUtils()
     }
 
-    fun getUserReposList(user: UserResponse) {
+    fun getIssueComments(userName: String, repoName: String, issueNumber: Int) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            val repos = githubUtils.getUserReposList(user.login)
+            val repos = githubUtils.getIssueCommentsList(owner = userName, repo = repoName, issueNumber = issueNumber)
+
             withContext(Dispatchers.Main) {
-                _reposLiveData.value = repos
+                _issueCommentsLiveData.value = repos
             }
         }
     }
+
 }

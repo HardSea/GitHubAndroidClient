@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pmacademy.githubclient.R
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 
-class ReposItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
+private class ReposItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
     override fun areItemsTheSame(oldItem: ReposResponse, newItem: ReposResponse): Boolean {
         return oldItem == newItem
     }

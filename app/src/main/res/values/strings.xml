@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">GitHub Client</string>
     <string name="user_avatar_description">User avatar</string>
+    <string name="text_readme_empty">Readme are empty</string>
 </resources>

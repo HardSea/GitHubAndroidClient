@@ -13,4 +13,4 @@ data class IssueResponse(
     val body: String,
     @SerialName("number")
     val number: Int
-)
+): java.io.Serializable
