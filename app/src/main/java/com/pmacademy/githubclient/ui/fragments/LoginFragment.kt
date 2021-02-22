@@ -46,7 +46,7 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
             user = githubUtils.getUser(token).successResult
             sharedPreferences.localUserName = user.login
             sharedPreferences.localUserAvatarUrl = user.avatarUrl
-            navigator.showUserInfoFragment(user)
+            navigator.showUserInfoFragment(user, addToBackStack = false)
             requireActivity().intent.data = null
         }
     }

@@ -50,6 +50,7 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
         setupView()
     }
 
+
     private fun setupView() {
         binding.tvIssueAuthor.text = userName
         binding.tvIssueTitle.text = issue.title

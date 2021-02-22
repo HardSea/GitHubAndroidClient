@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                 UserResponse(
                     login = sharedPreferences.localUserName,
                     avatarUrl = sharedPreferences.localUserAvatarUrl
-                )
+                ), addToBackStack = false
             )
         }
     }

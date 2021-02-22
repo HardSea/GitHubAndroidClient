@@ -1,5 +1,6 @@
 package com.pmacademy.githubclient.ui
 
+import android.util.Log
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
 import com.pmacademy.githubclient.data.model.IssueResponse
@@ -47,10 +48,11 @@ class FragmentNavigator(
             .commit()
     }
 
-    fun showUserInfoFragment(user: UserResponse) {
-        fragmentManager.beginTransaction()
+    fun showUserInfoFragment(user: UserResponse, addToBackStack: Boolean = true) {
+        Log.d("TAG43", "showUserInfoFragment: addToBackStack")
+        val transaction = fragmentManager.beginTransaction()
             .replace(container, UserInfoFragment.newInstance(user))
-            .addToBackStack(null)
-            .commit()
+        if (addToBackStack) transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
