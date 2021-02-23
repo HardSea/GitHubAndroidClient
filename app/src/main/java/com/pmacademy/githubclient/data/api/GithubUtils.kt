@@ -1,11 +1,13 @@
-package com.pmacademy.githubclient.tools
+package com.pmacademy.githubclient.data.api
 
 import android.net.Uri
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.pmacademy.githubclient.data.api.GitHubServiceApi
-import com.pmacademy.githubclient.data.model.AccessToken
-import com.pmacademy.myapplicationtemp.data.Repos
-import com.pmacademy.myapplicationtemp.data.User
+import com.pmacademy.githubclient.data.model.AccessTokenResponse
+import com.pmacademy.githubclient.data.model.IssueResponse
+import com.pmacademy.githubclient.data.model.UserResponse
+import com.pmacademy.githubclient.tools.GithubError
+import com.pmacademy.githubclient.tools.Result
+import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
@@ -32,6 +34,8 @@ class GithubUtils {
         Json { ignoreUnknownKeys = true }
             .asConverterFactory("application/json".toMediaType())
     }
+
+    private val githubInterceptor = GitHubInterceptor()
 
     private fun createRetrofit(baseHost: String): Retrofit {
         return Retrofit.Builder()
@@ -72,16 +76,46 @@ class GithubUtils {
         return uri.getQueryParameter("code")
     }
 
-    suspend fun getAccessToken(code: String): AccessToken {
+    suspend fun getAccessToken(code: String): AccessTokenResponse {
         return loginGithubService.getAccessToken(clientId, clientSecret, code)
     }
 
-    suspend fun getUser(token: String): User {
-        return apiGithubService.getUser(token)
+    suspend fun getUser(token: String): Result<UserResponse, GithubError> {
+        return try {
+            Result.success(apiGithubService.getUser(token))
+        } catch (e: Exception) {
+            githubInterceptor.getError(e)
+        }
     }
 
-    suspend fun getUserRepos(token: String): List<Repos> {
-        return apiGithubService.getUserRepos(token)
+    suspend fun getListUserRepos(username: String): Result<List<ReposResponse>, GithubError> {
+        return try {
+            Result.success(apiGithubService.getListUserRepos(username))
+        } catch (e: Exception) {
+            githubInterceptor.getError(e)
+        }
+    }
+
+    suspend fun getReposContributors(
+        owner: String,
+        repo: String
+    ): Result<List<UserResponse>, GithubError> {
+        return try {
+            Result.success(apiGithubService.getReposContributors(owner = owner, repo = repo))
+        } catch (e: Exception) {
+            githubInterceptor.getError(e)
+        }
+    }
+
+    suspend fun getReposIssues(
+        owner: String,
+        repo: String
+    ): Result<List<IssueResponse>, GithubError> {
+        return try {
+            Result.success(apiGithubService.getReposIssues(owner = owner, repo = repo))
+        } catch (e: Exception) {
+            githubInterceptor.getError(e)
+        }
     }
 
 }

@@ -3,7 +3,7 @@ package com.pmacademy.githubclient
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.pmacademy.githubclient.data.pref.SharedPref
-import com.pmacademy.githubclient.ui.fragments.FragmentNavigator
+import com.pmacademy.githubclient.ui.FragmentNavigator
 
 class MainActivity : AppCompatActivity() {
 
