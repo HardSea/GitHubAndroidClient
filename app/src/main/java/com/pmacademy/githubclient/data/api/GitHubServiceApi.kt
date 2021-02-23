@@ -21,9 +21,8 @@ interface GitHubServiceApi {
     @GET("/user")
     suspend fun getUser(@Header("Authorization") auth: String): UserResponse
 
-    //TODO: add option for sort
     @Headers("Accept: application/vnd.github.v3+json")
-    @GET("/users/{username}/repos")
+    @GET("/users/{username}/repos?sort=pushed")
     suspend fun getListUserRepos(
         @Header("Authorization") auth: String,
         @Path("username") username: String
