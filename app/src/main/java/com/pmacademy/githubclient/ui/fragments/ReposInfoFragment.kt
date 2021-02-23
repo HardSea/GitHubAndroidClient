@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pmacademy.githubclient.R
+import com.pmacademy.githubclient.data.model.IssueResponse
+import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.RepositoryInfoFragmentBinding
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.ContributorsListAdapter
@@ -67,56 +69,51 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
     }
 
     private fun observeLiveData() {
-        viewModel.contributorsLiveData.observe(viewLifecycleOwner, { contributorsList ->
-            if (contributorsList.isError) {
-                if (contributorsList.errorResult == GithubError.UNAUTHORIZED) {
-                    navigator.showLoginFragment()
-                    Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
-                        .show()
+        viewModel.repoInfoLiveData.observe(viewLifecycleOwner, { repoInfoModel ->
+            if (!repoInfoModel.isLoading) {
+                if (!repoInfoModel.isError) {
+                    showAllViewsHideProgressBar()
+                    if (repoInfoModel.successResult.readmeText.isNotEmpty()) {
+                        showReadme(repoInfoModel.successResult.readmeText)
+                    }
+                    if (repoInfoModel.successResult.contributorsList.isNotEmpty()) {
+                        showContributorsList(repoInfoModel.successResult.contributorsList)
+                    }
+                    if (repoInfoModel.successResult.issuesList.isNotEmpty()) {
+                        showIssuesList(repoInfoModel.successResult.issuesList)
+                    }
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Error when get repo contributors",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    handleError(repoInfoModel.errorResult)
                 }
-            } else {
-                contributorsListAdapter.updateContributorsList(contributorsList.successResult)
             }
         })
-        viewModel.issuesLiveData.observe(viewLifecycleOwner, { issuesList ->
-            if (issuesList.isError) {
-                if (issuesList.errorResult == GithubError.UNAUTHORIZED) {
-                    navigator.showLoginFragment()
-                    Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Error when get repo contributors",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            } else {
-                issuesListAdapter.updateIssuesList(issuesList.successResult)
+    }
+
+    private fun handleError(errorResult: GithubError) {
+        when (errorResult) {
+            GithubError.UNAUTHORIZED -> {
+                Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT).show()
+                navigator.showLoginFragment()
             }
-        })
-        viewModel.readmeLiveData.observe(viewLifecycleOwner, { readmeText ->
-            if (readmeText.isError) {
-                if (readmeText.errorResult == GithubError.UNAUTHORIZED) {
-                    navigator.showLoginFragment()
-                    Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    showReadmeError()
-                }
-            } else {
-                showReadme(readmeText.successResult)
-            }
-            showAllViewsHideProgressBar()
-        })
+            else -> showEmptyRepoTitle()
+        }
+    }
+
+    private fun showEmptyRepoTitle() {
+        binding.progressBarLoading.visibility = View.GONE
+        binding.tvEmptyRepoCaption.visibility = View.VISIBLE
+    }
+
+    private fun showIssuesList(issuesList: List<IssueResponse>) {
+        issuesListAdapter.updateIssuesList(issuesList)
+        binding.tvEmptyIssuesList.visibility = View.GONE
+        binding.rvIssuesList.visibility = View.VISIBLE
+    }
+
+    private fun showContributorsList(contributorsList: List<UserResponse>) {
+        contributorsListAdapter.updateContributorsList(contributorsList)
+        binding.tvEmptyContributorsList.visibility = View.GONE
+        binding.rvContributorsList.visibility = View.VISIBLE
     }
 
     private fun showAllViewsHideProgressBar() {
@@ -125,21 +122,17 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
         binding.tvReadmeText.visibility = View.VISIBLE
         binding.tvContributorsListText.visibility = View.VISIBLE
         binding.tvIssuesListText.visibility = View.VISIBLE
-        binding.rvIssuesList.visibility = View.VISIBLE
-        binding.rvContributorsList.visibility = View.VISIBLE
+
+        binding.tvEmptyIssuesList.visibility = View.VISIBLE
+        binding.tvEmptyContributorsList.visibility = View.VISIBLE
 
         binding.progressBarLoading.visibility = View.GONE
     }
 
-    private fun showReadmeError() {
-        binding.tvReadme.text = getString(R.string.text_readme_empty)
-        binding.tvReadme.gravity = Gravity.CENTER
-    }
-
-
     private fun showReadme(readme: String) {
         binding.tvReadme.text = readme
         binding.tvReadme.movementMethod = ScrollingMovementMethod()
+        binding.tvReadme.gravity = Gravity.START
     }
 
     companion object {

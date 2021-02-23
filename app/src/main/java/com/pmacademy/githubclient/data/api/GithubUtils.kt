@@ -71,9 +71,6 @@ class GithubUtils {
     }
 
     suspend fun getAccessToken(code: String): AccessTokenResponse {
-        Log.d("TAGttt", "getAccessToken: $code")
-        Log.d("TAGttt", "getAccessToken: $clientId")
-        Log.d("TAGttt", "getAccessToken: $clientSecret")
         return loginGithubService.getAccessToken(clientId, clientSecret, code)
     }
 
@@ -128,7 +125,6 @@ class GithubUtils {
                 auth = authToken
             )
             val encodeReadme = StringDecoder().decodeText(readme.content, readme.encoding)
-            Log.d("TAGreadme", "getRepoReadme: $encodeReadme")
             return Result.success(encodeReadme)
         } catch (e: Exception) {
             githubInterceptor.getError(e)
@@ -149,6 +145,7 @@ class GithubUtils {
                 )
             )
         } catch (e: Exception) {
+            Log.d("tagsss", "getReposContributors: $e")
             githubInterceptor.getError(e)
         }
     }
@@ -199,7 +196,6 @@ class GithubUtils {
             )
             Result.success(true)
         } catch (e: Exception) {
-            Log.d("TAG_ERROR", "createReactionForIssueComment: ERROR $e")
             githubInterceptor.getError(e)
         }
     }

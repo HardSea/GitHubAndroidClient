@@ -2,4 +2,6 @@
 <resources>
     <dimen name="user_name_text_size">22sp</dimen>
     <dimen name="user_avatar_image_size">100dp</dimen>
+    <dimen name="readme_height_size">150dp</dimen>
+    <dimen name="repo_name_size_text">18sp</dimen>
 </resources>

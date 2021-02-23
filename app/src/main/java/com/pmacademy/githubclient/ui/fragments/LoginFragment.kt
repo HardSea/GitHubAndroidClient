@@ -8,7 +8,6 @@ import android.widget.Button
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.api.GithubUtils
 import com.pmacademy.githubclient.data.model.UserResponse
-import com.pmacademy.githubclient.data.pref.SharedPref
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -37,16 +36,10 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
     private fun saveUserToken(code: String) {
         GlobalScope.launch {
-
-
-            Log.d("TAGtest", "saveUserToken: $code")
             val response = githubUtils.getAccessToken(code)
-
             val token = "${response.tokenType} ${response.accessToken}"
-
-            Log.d("TAGtest", "saveUserToken: $token")
+            Log.d(TAG, "saveUserToken: $token")
             sharedPreferences.token = token
-
             user = githubUtils.getUser(token).successResult
             saveUserToSharedPreference()
             navigator.showUserInfoFragment(user, addToBackStack = false)
@@ -68,7 +61,6 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
     companion object {
         private val TAG = LoginFragment::class.java.simpleName
-
         fun newInstance(): LoginFragment {
             return LoginFragment()
         }

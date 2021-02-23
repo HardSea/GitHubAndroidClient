@@ -41,13 +41,9 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         super.onViewCreated(view, savedInstanceState)
         observeReposLiveData()
         initRecyclerView()
-        setUserName()
+        binding.tvUserName.text = user.login
         viewModel.getUserReposList(user = user, authToken = sharedPreferences.token)
 
-    }
-
-    private fun setUserName() {
-        binding.tvUserName.text = user.login
     }
 
     private fun loadAvatar(imageUrl: String) {
@@ -63,39 +59,48 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
     }
 
     private fun updateReposList(items: List<ReposResponse>) {
-        rvPostsAdapter.updateReposList(items)
+        if (items.isNotEmpty()) {
+            rvPostsAdapter.updateReposList(items)
+        } else {
+            showEmptyReposTitle()
+        }
     }
 
-    private fun showErrorMessage(error: GithubError) {
-        binding.rvListRepositories.visibility = View.GONE
-        binding.ivUserAvatar.visibility = View.GONE
-        binding.tvUserName.visibility = View.GONE
-        binding.tvListRepositoriesText.visibility = View.GONE
+    private fun showEmptyReposTitle() {
+        binding.tvEmptyReposListCaption.visibility = View.VISIBLE
+        binding.rvListRepositories.visibility = View.INVISIBLE
+    }
 
+    private fun showErrorMessage(error: String) {
+        binding.progressBarLoading.visibility = View.INVISIBLE
         binding.tvErrorMessage.visibility = View.VISIBLE
-        binding.tvErrorMessage.text = error.name
+        binding.tvErrorMessage.text = error
     }
 
     private fun observeReposLiveData() {
-        viewModel.reposLiveData.observe(viewLifecycleOwner, {
-            if (!it.isLoading) {
-
-                if (it.isError) {
-                    if (it.errorResult == GithubError.UNAUTHORIZED) {
-                        navigator.showLoginFragment()
-                        Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
-                            .show()
-                    } else {
-                        showErrorMessage(it.errorResult)
-                    }
+        viewModel.reposLiveData.observe(viewLifecycleOwner, { reposList ->
+            if (!reposList.isLoading) {
+                if (reposList.isError) {
+                    handleError(reposList.errorResult)
                 } else {
-                    updateReposList(it.successResult)
                     loadAvatar(user.avatarUrl)
                     showAllViewsHideProgressBar()
+                    updateReposList(reposList.successResult)
                 }
             }
         })
     }
+
+    private fun handleError(errorResult: GithubError) {
+        when (errorResult) {
+            GithubError.UNAUTHORIZED -> {
+                Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT).show()
+                navigator.showLoginFragment()
+            }
+            else -> showErrorMessage(errorResult.toString())
+        }
+    }
+
 
     private fun showAllViewsHideProgressBar() {
         binding.tvUserName.visibility = View.VISIBLE
