@@ -25,17 +25,7 @@ class UserInfoViewModel : ViewModel() {
     }
 
     fun getUserReposList(user: UserResponse, authToken: String) {
-
-
         viewModelScope.launch(Dispatchers.IO) {
-//            githubUtils.createReactionForIssueComment(
-//                "HardSea",
-//                "HardSkins",
-//                authToken,
-//                783297652,
-//                "+1"
-//            )
-
             val repos = githubUtils.getUserReposList(user.login, authToken)
             withContext(Dispatchers.Main) {
                 _reposLiveData.value = repos

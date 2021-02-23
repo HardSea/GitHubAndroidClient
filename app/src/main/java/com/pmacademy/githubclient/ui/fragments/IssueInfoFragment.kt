@@ -100,7 +100,6 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
                     .show()
             }
         })
-
     }
 
     private fun showAllViewsHideProgressBar() {

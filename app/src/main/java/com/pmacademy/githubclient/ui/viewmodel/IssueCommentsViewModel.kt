@@ -27,7 +27,6 @@ class IssueCommentsViewModel : ViewModel() {
     val createReactionResultLiveData: LiveData<Result<Boolean, GithubError>> =
         _createReactionResultLiveData
 
-
     private val githubUtils: GithubUtils by lazy {
         GithubUtils()
     }
@@ -41,7 +40,6 @@ class IssueCommentsViewModel : ViewModel() {
                 issueNumber = issueNumber,
                 authToken = authToken
             )
-
             withContext(Dispatchers.Main) {
                 _issueCommentsLiveData.value = repos
             }
@@ -57,6 +55,7 @@ class IssueCommentsViewModel : ViewModel() {
     ) {
         viewModelScope.launch(Dispatchers.IO) {
 
+
             val result = githubUtils.createReactionForIssueComment(
                 owner = userName,
                 repo = repoName,
@@ -69,5 +68,4 @@ class IssueCommentsViewModel : ViewModel() {
             }
         }
     }
-
 }

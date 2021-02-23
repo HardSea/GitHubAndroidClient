@@ -66,27 +66,26 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         rvPostsAdapter.updateReposList(items)
     }
 
-    private fun showErrorMessage(error: GithubError) {
+    private fun showErrorMessage(error: String) {
         binding.rvListRepositories.visibility = View.GONE
         binding.ivUserAvatar.visibility = View.GONE
         binding.tvUserName.visibility = View.GONE
         binding.tvListRepositoriesText.visibility = View.GONE
 
         binding.tvErrorMessage.visibility = View.VISIBLE
-        binding.tvErrorMessage.text = error.name
+        binding.tvErrorMessage.text = error
     }
 
     private fun observeReposLiveData() {
         viewModel.reposLiveData.observe(viewLifecycleOwner, {
             if (!it.isLoading) {
-
                 if (it.isError) {
                     if (it.errorResult == GithubError.UNAUTHORIZED) {
                         navigator.showLoginFragment()
                         Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        showErrorMessage(it.errorResult)
+                        showErrorMessage(it.errorResult.toString())
                     }
                 } else {
                     updateReposList(it.successResult)

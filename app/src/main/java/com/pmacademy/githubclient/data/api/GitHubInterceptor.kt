@@ -1,20 +1,17 @@
 package com.pmacademy.githubclient.data.api
 
-import android.util.Log
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
 
 
 class GitHubInterceptor {
-
-    companion object {
+    private companion object {
         private const val ERROR_404 = "HTTP 404 "
         private const val ERROR_403 = "HTTP 403 "
         private const val ERROR_401 = "HTTP 401 "
     }
 
     fun <T> getError(exception: Exception): Result<T, GithubError> {
-        Log.d("TAG33", "getError: $exception")
         return when (exception.message) {
             ERROR_404 -> Result.error(GithubError.RESOURCE_NOT_FOUND)
             ERROR_403 -> Result.error(GithubError.API_RATE_LIMIT_EXCEED)

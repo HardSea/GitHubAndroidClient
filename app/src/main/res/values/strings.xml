@@ -10,4 +10,9 @@
     <string name="hooray_text">🎉</string>
     <string name="rocket_text">🚀</string>
     <string name="eyes_text">👀</string>
+    <string name="tv_readme_text_hint">Readme text:</string>
+    <string name="tv_contributors_list_hint">Contributors list:</string>
+    <string name="tv_contributors_list_are_empty">Contributors list are empty</string>
+    <string name="tv_issues_list_hint">Issues list:</string>
+    <string name="issues_list_are_empty">Issues list are empty</string>
 </resources>
