@@ -15,4 +15,6 @@
     <string name="tv_contributors_list_are_empty">Contributors list are empty</string>
     <string name="tv_issues_list_hint">Issues list:</string>
     <string name="issues_list_are_empty">Issues list are empty</string>
+    <string name="this_repository_empty_text">This repository is empty</string>
+    <string name="the_list_of_repositories_is_empty">The list of repositories is empty</string>
 </resources>

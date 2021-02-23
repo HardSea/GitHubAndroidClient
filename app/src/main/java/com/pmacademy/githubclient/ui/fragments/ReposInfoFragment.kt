@@ -2,7 +2,6 @@ package com.pmacademy.githubclient.ui.fragments
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -74,7 +73,6 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
             if (!repoInfoModel.isLoading) {
                 if (!repoInfoModel.isError) {
                     showAllViewsHideProgressBar()
-                    Log.d("TAGresult", "observeLiveData: ${repoInfoModel.successResult}")
                     if (repoInfoModel.successResult.readmeText.isNotEmpty()) {
                         showReadme(repoInfoModel.successResult.readmeText)
                     }
@@ -92,10 +90,18 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
     }
 
     private fun handleError(errorResult: GithubError) {
-        if (errorResult == GithubError.UNAUTHORIZED) {
-            Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT).show()
-            navigator.showLoginFragment()
+        when (errorResult) {
+            GithubError.UNAUTHORIZED -> {
+                Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT).show()
+                navigator.showLoginFragment()
+            }
+            else -> showEmptyRepoTitle()
         }
+    }
+
+    private fun showEmptyRepoTitle() {
+        binding.progressBarLoading.visibility = View.GONE
+        binding.tvEmptyRepoCaption.visibility = View.VISIBLE
     }
 
     private fun showIssuesList(issuesList: List<IssueResponse>) {

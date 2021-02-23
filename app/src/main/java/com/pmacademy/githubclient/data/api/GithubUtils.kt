@@ -1,6 +1,7 @@
 package com.pmacademy.githubclient.data.api
 
 import android.net.Uri
+import android.util.Log
 import com.google.gson.JsonParser
 import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.githubclient.tools.GithubError
@@ -144,6 +145,7 @@ class GithubUtils {
                 )
             )
         } catch (e: Exception) {
+            Log.d("tagsss", "getReposContributors: $e")
             githubInterceptor.getError(e)
         }
     }

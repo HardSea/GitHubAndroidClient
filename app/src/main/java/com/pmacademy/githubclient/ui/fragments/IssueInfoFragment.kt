@@ -73,26 +73,19 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
 
 
     private fun observeIssueCommentsLiveData() {
-        viewModel.issueCommentsLiveData.observe(viewLifecycleOwner, {
-            if (it.isError) {
-                if (it.errorResult == GithubError.UNAUTHORIZED) {
-                    navigator.showLoginFragment()
-                    Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Error when get issue comments",
-                        Toast.LENGTH_SHORT
-                    ).show()
+        viewModel.issueCommentsLiveData.observe(viewLifecycleOwner, { issueComments ->
+            if (!issueComments.isError) {
+                showAllViewsHideProgressBar()
+                if (issueComments.successResult.isNotEmpty()) {
+                    showIssueComments(issueComments.successResult)
                 }
             } else {
-                updateIssueCommentsList(it.successResult)
-                showAllViewsHideProgressBar()
+                handleError(issueComments.errorResult)
             }
         })
-        viewModel.createReactionResultLiveData.observe(viewLifecycleOwner, {
-            if (it.isError) {
+
+        viewModel.createReactionResultLiveData.observe(viewLifecycleOwner, { createReactionResult ->
+            if (createReactionResult.isError) {
                 Toast.makeText(requireContext(), "Create reaction are failed", Toast.LENGTH_SHORT)
                     .show()
             } else {
@@ -102,16 +95,30 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
         })
     }
 
+    private fun handleError(errorResult: GithubError) {
+        if (errorResult == GithubError.UNAUTHORIZED) {
+            navigator.showLoginFragment()
+            Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(
+                requireContext(), "Error when get issue comments", Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     private fun showAllViewsHideProgressBar() {
         binding.tvIssueBody.visibility = View.VISIBLE
         binding.tvIssueTitle.visibility = View.VISIBLE
         binding.tvIssueAuthor.visibility = View.VISIBLE
-        binding.rvIssueComments.visibility = View.VISIBLE
+        binding.tvEmptyIssueCommentsText.visibility = View.VISIBLE
 
         binding.progressBarLoading.visibility = View.GONE
     }
 
-    private fun updateIssueCommentsList(commentsList: List<IssueCommentResponse>) {
+    private fun showIssueComments(commentsList: List<IssueCommentResponse>) {
+        binding.tvEmptyIssueCommentsText.visibility = View.GONE
+        binding.rvIssueComments.visibility = View.VISIBLE
         rvIssueCommentsAdapter.updateIssuesList(commentsList)
     }
 

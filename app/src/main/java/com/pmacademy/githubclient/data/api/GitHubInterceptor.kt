@@ -1,5 +1,6 @@
 package com.pmacademy.githubclient.data.api
 
+import android.util.Log
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
 
