@@ -2,20 +2,19 @@ package com.pmacademy.githubclient.data.api
 
 import android.net.Uri
 import android.util.Log
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.google.gson.JsonParser
 import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
 import com.pmacademy.githubclient.tools.StringDecoder
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Converter
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 
 @ExperimentalSerializationApi
 class GithubUtils {
@@ -30,11 +29,6 @@ class GithubUtils {
         const val apiHost = "api.github.com"
     }
 
-    private val converterFactory: Converter.Factory by lazy {
-        Json { ignoreUnknownKeys = true }
-            .asConverterFactory("application/json".toMediaType())
-    }
-
     private val githubInterceptor = GitHubInterceptor()
 
     private fun createRetrofit(baseHost: String): Retrofit {
@@ -45,7 +39,7 @@ class GithubUtils {
                     .build()
             )
             .baseUrl(HttpUrl.Builder().scheme(schema).host(baseHost).build())
-            .addConverterFactory(converterFactory)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
@@ -120,24 +114,6 @@ class GithubUtils {
         }
     }
 
-    suspend fun getRepoInfo(
-        owner: String,
-        repo: String,
-        authToken: String
-    ): Result<RepoInfoResponse, GithubError> {
-        return try {
-            Result.success(
-                apiGithubService.getRepoInfo(
-                    owner = owner,
-                    repo = repo,
-                    auth = authToken
-                )
-            )
-        } catch (e: Exception) {
-            githubInterceptor.getError(e)
-        }
-    }
-
     suspend fun getRepoReadme(
         owner: String,
         repo: String,
@@ -198,21 +174,31 @@ class GithubUtils {
         repo: String,
         authToken: String,
         commentId: Int,
-        reactionString: String
-    ) {
-        try {
+        clickType: ReactionType
+    ): Result<Boolean, GithubError> {
+        return try {
+            val reactionString = when (clickType) {
+                ReactionType.LIKE -> "+1"
+                ReactionType.DISLIKE -> "-1"
+                ReactionType.LAUGH -> "laugh"
+                ReactionType.CONFUSED -> "confused"
+                ReactionType.HEART -> "heart"
+                ReactionType.HOORAY -> "hooray"
+                ReactionType.ROCKET -> "rocket"
+                ReactionType.EYES -> "eyes"
+            }
+
             apiGithubService.createReactionForIssueComment(
                 owner = owner,
                 repo = repo,
                 auth = authToken,
                 commentId = commentId,
-                reactions = reactionString
+                reaction = JsonParser().parse("{\"content\": \"$reactionString\"}").asJsonObject
             )
-
+            Result.success(true)
         } catch (e: Exception) {
-            Log.d("TAG_ERROR", "createReactionForIssueComment: ERROR ${e.toString()}")
-            //githubInterceptor.getError(e)
+            Log.d("TAG_ERROR", "createReactionForIssueComment: ERROR $e")
+            githubInterceptor.getError(e)
         }
     }
-
 }

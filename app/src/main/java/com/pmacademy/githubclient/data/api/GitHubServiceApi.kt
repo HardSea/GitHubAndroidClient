@@ -1,5 +1,6 @@
 package com.pmacademy.githubclient.data.api
 
+import com.google.gson.JsonObject
 import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 import retrofit2.http.*
@@ -37,15 +38,6 @@ interface GitHubServiceApi {
         @Path("issue_number") issueNumber: Int
     ): List<IssueCommentResponse>
 
-
-    @Headers("Accept: application/vnd.github.v3+json")
-    @GET("/repos/{owner}/{repo}")
-    suspend fun getRepoInfo(
-        @Header("Authorization") auth: String,
-        @Path("owner") owner: String,
-        @Path("repo") repo: String
-    ): RepoInfoResponse
-
     @GET("/repos/{owner}/{repo}/contents/README.md")
     suspend fun getRepoReadme(
         @Header("Authorization") auth: String,
@@ -69,6 +61,7 @@ interface GitHubServiceApi {
         @Path("repo") repo: String
     ): List<UserResponse>
 
+
     @Headers("Accept: application/vnd.github.squirrel-girl-preview")
     @POST("/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions")
     suspend fun createReactionForIssueComment(
@@ -76,6 +69,6 @@ interface GitHubServiceApi {
         @Path("owner") owner: String,
         @Path("repo") repo: String,
         @Path("comment_id") commentId: Int,
-        @Body reactions: String
+        @Body reaction: JsonObject
     )
 }

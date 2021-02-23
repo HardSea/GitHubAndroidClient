@@ -2,10 +2,10 @@ package com.pmacademy.githubclient.ui.fragments
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -27,7 +27,15 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
     private lateinit var issue: IssueResponse
     private lateinit var userName: String
     private lateinit var repoName: String
-    private val rvIssueCommentsAdapter = IssueCommentsAdapter { Log.d("TAG11", "Click on comment") }
+    private val rvIssueCommentsAdapter = IssueCommentsAdapter { commentResponse, clickType ->
+        viewModel.createCommentReaction(
+            userName = userName,
+            repoName = repoName,
+            commentResponse = commentResponse,
+            authToken = sharedPreferences.token,
+            clickType = clickType
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +78,15 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
             } else {
                 updateIssueCommentsList(it.successResult)
                 showAllViewsHideProgressBar()
+            }
+        })
+        viewModel.createReactionResultLiveData.observe(viewLifecycleOwner, {
+            if (it.isError) {
+                Toast.makeText(requireContext(), "Create reaction are failed", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(requireContext(), "Create reaction successful", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
