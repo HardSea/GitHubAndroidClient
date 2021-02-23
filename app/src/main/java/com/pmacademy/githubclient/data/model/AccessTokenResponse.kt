@@ -1,11 +1,9 @@
 package com.pmacademy.githubclient.data.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class AccessTokenResponse(
-    @SerialName("access_token") val accessToken: String,
-    @SerialName("scope") val scope: String,
-    @SerialName("token_type") val tokenType: String,
+    @SerializedName("access_token") val accessToken: String,
+    @SerializedName("scope") val scope: String,
+    @SerializedName("token_type") val tokenType: String,
 )

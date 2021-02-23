@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pmacademy.githubclient.data.api.GithubUtils
 import com.pmacademy.githubclient.data.model.IssueResponse
-import com.pmacademy.githubclient.data.model.RepoInfoResponse
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
@@ -40,6 +39,7 @@ class ReposInfoViewModel : ViewModel() {
                 repo = repoName,
                 authToken = authToken
             )
+            Log.d("TAG444", "getRepoInfo: ${contributorsList.successResult}")
             val issueList =
                 githubUtils.getReposIssues(owner = userName, repo = repoName, authToken = authToken)
 

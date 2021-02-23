@@ -8,7 +8,7 @@ import retrofit2.http.*
 interface GitHubServiceApi {
 
 
-    @Headers("Accept: application/json")
+    @Headers("Accept: application/vnd.github.v3+json")
     @POST("/login/oauth/access_token")
     @FormUrlEncoded
     suspend fun getAccessToken(

@@ -14,6 +14,7 @@ import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.IssueCommentResponse
 import com.pmacademy.githubclient.data.model.IssueResponse
 import com.pmacademy.githubclient.databinding.IssueInfoFragmentBinding
+import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.IssueCommentsAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import com.pmacademy.githubclient.ui.viewmodel.IssueCommentsViewModel
@@ -74,7 +75,17 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
     private fun observeIssueCommentsLiveData() {
         viewModel.issueCommentsLiveData.observe(viewLifecycleOwner, {
             if (it.isError) {
-                //showErrorMessage(it.errorResult)
+                if (it.errorResult == GithubError.UNAUTHORIZED) {
+                    navigator.showLoginFragment()
+                    Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error when get issue comments",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } else {
                 updateIssueCommentsList(it.successResult)
                 showAllViewsHideProgressBar()

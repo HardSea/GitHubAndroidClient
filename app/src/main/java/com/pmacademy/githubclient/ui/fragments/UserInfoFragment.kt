@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -78,8 +79,15 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
     private fun observeReposLiveData() {
         viewModel.reposLiveData.observe(viewLifecycleOwner, {
             if (!it.isLoading) {
+
                 if (it.isError) {
-                    showErrorMessage(it.errorResult)
+                    if (it.errorResult == GithubError.UNAUTHORIZED) {
+                        navigator.showLoginFragment()
+                        Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        showErrorMessage(it.errorResult)
+                    }
                 } else {
                     updateReposList(it.successResult)
                     loadAvatar(user.avatarUrl)

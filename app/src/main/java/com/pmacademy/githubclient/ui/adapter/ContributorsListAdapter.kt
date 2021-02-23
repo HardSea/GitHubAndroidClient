@@ -1,5 +1,6 @@
 package com.pmacademy.githubclient.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,7 @@ class ContributorsListAdapter(private val contributorClickListener: (UserRespons
         fun bind(contributorUser: UserResponse, onContributorClick: (UserResponse) -> Unit) {
             tvContributorName?.text = contributorUser.login
             itemView.setOnClickListener {
+                Log.d("TAG444", "bind: $contributorUser")
                 onContributorClick.invoke(contributorUser)
             }
         }
