@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_issue_comment_body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        tools:text="Test body comment" />
+
+    <TextView
+        android:id="@+id/tv_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/like_text"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_dislike"
+        app:layout_constraintTop_toBottomOf="@id/tv_issue_comment_body" />
+
+
+    <TextView
+        android:id="@+id/tv_dislike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dislike_text"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_like"
+        app:layout_constraintLeft_toRightOf="@id/tv_like"
+        app:layout_constraintRight_toLeftOf="@id/tv_laugh"
+        app:layout_constraintTop_toTopOf="@id/tv_like" />
+
+    <TextView
+        android:id="@+id/tv_laugh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/laught_text"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_like"
+        app:layout_constraintLeft_toRightOf="@id/tv_dislike"
+        app:layout_constraintRight_toLeftOf="@id/tv_confused" />
+
+
+    <TextView
+        android:id="@+id/tv_confused"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confused_text"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintLeft_toRightOf="@id/tv_laugh"
+        app:layout_constraintRight_toLeftOf="@id/tv_heart"
+        app:layout_constraintTop_toTopOf="@id/tv_like" />
+
+    <TextView
+        android:id="@+id/tv_heart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/heart_text"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_like"
+        app:layout_constraintLeft_toRightOf="@id/tv_confused"
+        app:layout_constraintRight_toLeftOf="@id/tv_hooray"
+        app:layout_constraintTop_toTopOf="@id/tv_like" />
+
+
+    <TextView
+        android:id="@+id/tv_hooray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hooray_text"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_like"
+        app:layout_constraintLeft_toRightOf="@id/tv_heart"
+        app:layout_constraintRight_toLeftOf="@id/tv_rocket"
+        app:layout_constraintTop_toTopOf="@id/tv_like" />
+
+    <TextView
+        android:id="@+id/tv_rocket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rocket_text"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_like"
+        app:layout_constraintLeft_toRightOf="@+id/tv_hooray"
+        app:layout_constraintRight_toLeftOf="@id/tv_eyes"
+        app:layout_constraintTop_toTopOf="@id/tv_like" />
+
+
+    <TextView
+        android:id="@+id/tv_eyes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/eyes_text"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_like"
+        app:layout_constraintLeft_toRightOf="@id/tv_rocket"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_like" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

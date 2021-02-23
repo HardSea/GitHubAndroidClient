@@ -1,13 +1,12 @@
-package com.pmacademy.myapplicationtemp.data
+package com.pmacademy.githubclient.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ReposResponse(
-
+data class RepoInfoResponse(
     @SerialName("name")
     val name: String,
-    @SerialName("id")
-    val id: Int
+    @SerialName("description")
+    val description: String?
 )

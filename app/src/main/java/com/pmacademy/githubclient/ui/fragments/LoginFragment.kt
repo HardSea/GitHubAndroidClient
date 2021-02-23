@@ -17,10 +17,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalSerializationApi
 class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
-    private val sharedPreferences by lazy {
-        SharedPref(requireActivity())
-    }
-
     private lateinit var user: UserResponse
 
     private val githubUtils: GithubUtils by lazy {
@@ -44,11 +40,18 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
             val response = githubUtils.getAccessToken(code)
             val token = "${response.tokenType} ${response.accessToken}"
             sharedPreferences.token = token
+
             user = githubUtils.getUser(token).successResult
-            Log.d(TAG, "saveUserToken: $user")
-            navigator.showUserInfoFragment(user)
+
+            saveUserToSharedPreference()
+            navigator.showUserInfoFragment(user, addToBackStack = false)
             requireActivity().intent.data = null
         }
+    }
+
+    private fun saveUserToSharedPreference() {
+        sharedPreferences.localUserName = user.login
+        sharedPreferences.localUserAvatarUrl = user.avatarUrl
     }
 
     override fun onResume() {

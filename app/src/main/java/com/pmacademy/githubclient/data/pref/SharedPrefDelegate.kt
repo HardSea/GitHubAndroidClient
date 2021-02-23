@@ -1,6 +1,7 @@
 package com.pmacademy.githubclient.data.pref
 
 import android.content.SharedPreferences
+import com.pmacademy.githubclient.data.model.UserResponse
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

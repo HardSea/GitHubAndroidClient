@@ -3,20 +3,27 @@ package com.pmacademy.githubclient.data.pref
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.pmacademy.githubclient.data.model.UserResponse
 
 class SharedPref(context: Context) {
 
-  private companion object {
-    const val KEY_TOKEN = "KEY_TOKEN"
-    const val KEY_LAST = "KEY_LAST"
-  }
+    private companion object {
+        const val KEY_TOKEN = "KEY_TOKEN"
+        const val KEY_LAST = "KEY_LAST"
+        const val KEY_LOCAL_USER_NAME = "KEY_LOCAL_USER_NAME"
+        const val KEY_LOCAL_USER_AVATAR_URL = "KEY_LOCAL_USER_AVATAR_URL"
+    }
 
-  private val sharedPreferences: SharedPreferences by lazy {
-    context.getSharedPreferences("main_shared_preferences", MODE_PRIVATE)
-  }
+    private val sharedPreferences: SharedPreferences by lazy {
+        context.getSharedPreferences("main_shared_preferences", MODE_PRIVATE)
+    }
 
-  var token: String by SharedPrefDelegate(sharedPreferences, KEY_TOKEN, "")
+    var token: String by SharedPrefDelegate(sharedPreferences, KEY_TOKEN, "")
 
-  val bool: Boolean by SharedPrefDelegate(sharedPreferences, KEY_LAST, true)
+    var localUserName: String by SharedPrefDelegate(sharedPreferences, KEY_LOCAL_USER_NAME, "")
+    var localUserAvatarUrl: String by SharedPrefDelegate(sharedPreferences, KEY_LOCAL_USER_AVATAR_URL, "")
+
+
+    val bool: Boolean by SharedPrefDelegate(sharedPreferences, KEY_LAST, true)
 
 }

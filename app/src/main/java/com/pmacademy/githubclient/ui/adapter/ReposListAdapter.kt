@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pmacademy.githubclient.R
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 
-class ReposItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
+private class ReposItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
     override fun areItemsTheSame(oldItem: ReposResponse, newItem: ReposResponse): Boolean {
         return oldItem == newItem
     }
@@ -20,25 +20,27 @@ class ReposItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
     }
 }
 
-class ReposListAdapter: ListAdapter<ReposResponse, RecyclerView.ViewHolder>(ReposItemDiffCallback()) {
+class ReposListAdapter(private val reposClickListener: (String) -> Unit) :
+    ListAdapter<ReposResponse, RecyclerView.ViewHolder>(ReposItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_repos_item, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.view_holder_repos_item, parent, false)
         return ReposListViewHolder(view)
-
     }
 
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder){
-            is ReposListViewHolder -> holder.bind(getItem(position))
+        when (holder) {
+            is ReposListViewHolder -> holder.bind(getItem(position), reposClickListener)
         }
     }
 
-    fun updateReposList(list: List<ReposResponse>){
+    fun updateReposList(list: List<ReposResponse>) {
         this.submitList(list)
     }
 
-    class ReposListViewHolder(view:View): RecyclerView.ViewHolder(view){
+    class ReposListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private var tvReposName: TextView? = null
 
@@ -46,10 +48,14 @@ class ReposListAdapter: ListAdapter<ReposResponse, RecyclerView.ViewHolder>(Repo
             tvReposName = view.findViewById(R.id.tv_repos_name)
         }
 
-        fun bind(reposItem: ReposResponse){
+        fun bind(reposItem: ReposResponse, onReposClick: (String) -> Unit) {
             tvReposName?.text = reposItem.name
+            itemView.setOnClickListener {
+                onReposClick.invoke(reposItem.name)
+            }
         }
     }
+
 }
 
 

@@ -20,7 +20,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalSerializationApi
 class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
-    private val recyclerViewPostsAdapter = ReposListAdapter()
+    private val rvPostsAdapter =
+        ReposListAdapter { reposName -> navigator.showProjectInfoFragment(reposName, user.login) }
     private lateinit var binding: UserInfoFragmentBinding
     private val viewModel: UserInfoViewModel by viewModels()
     private lateinit var user: UserResponse
@@ -37,11 +38,11 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getUserReposList(user)
+        observeReposLiveData()
         initRecyclerView()
-        observeRepos()
-        loadAvatar(user.avatarUrl)
         setUserName()
+        viewModel.getUserReposList(user = user, authToken = sharedPreferences.token)
+
     }
 
     private fun setUserName() {
@@ -56,12 +57,12 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
     }
 
     private fun initRecyclerView() {
-        binding.rvListRepositories.adapter = recyclerViewPostsAdapter
+        binding.rvListRepositories.adapter = rvPostsAdapter
         binding.rvListRepositories.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun updateReposList(items: List<ReposResponse>) {
-        recyclerViewPostsAdapter.updateReposList(items)
+        rvPostsAdapter.updateReposList(items)
     }
 
     private fun showErrorMessage(error: GithubError) {
@@ -74,14 +75,27 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         binding.tvErrorMessage.text = error.name
     }
 
-    private fun observeRepos() {
+    private fun observeReposLiveData() {
         viewModel.reposLiveData.observe(viewLifecycleOwner, {
-            if (!it.isError) {
-                updateReposList(it.successResult)
-            } else {
-                showErrorMessage(it.errorResult)
+            if (!it.isLoading) {
+                if (it.isError) {
+                    showErrorMessage(it.errorResult)
+                } else {
+                    updateReposList(it.successResult)
+                    loadAvatar(user.avatarUrl)
+                    showAllViewsHideProgressBar()
+                }
             }
         })
+    }
+
+    private fun showAllViewsHideProgressBar() {
+        binding.tvUserName.visibility = View.VISIBLE
+        binding.tvListRepositoriesText.visibility = View.VISIBLE
+        binding.rvListRepositories.visibility = View.VISIBLE
+        binding.ivUserAvatar.visibility = View.VISIBLE
+
+        binding.progressBarLoading.visibility = View.GONE
     }
 
     companion object {
