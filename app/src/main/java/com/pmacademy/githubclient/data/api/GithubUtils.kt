@@ -71,7 +71,9 @@ class GithubUtils {
     }
 
     suspend fun getAccessToken(code: String): AccessTokenResponse {
-        Log.d("TAG333", "getAccessToken: $code")
+        Log.d("TAGttt", "getAccessToken: $code")
+        Log.d("TAGttt", "getAccessToken: $clientId")
+        Log.d("TAGttt", "getAccessToken: $clientSecret")
         return loginGithubService.getAccessToken(clientId, clientSecret, code)
     }
 

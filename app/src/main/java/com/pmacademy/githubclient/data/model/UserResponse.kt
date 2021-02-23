@@ -1,12 +1,11 @@
 package com.pmacademy.githubclient.data.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-@Serializable
 data class UserResponse(
-    @SerialName("login")
+    @SerializedName("login")
     val login: String,
-    @SerialName("avatar_url")
+    @SerializedName("avatar_url")
     val avatarUrl: String
-): java.io.Serializable
+) : Serializable

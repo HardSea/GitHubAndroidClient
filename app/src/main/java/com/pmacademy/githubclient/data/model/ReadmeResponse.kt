@@ -1,12 +1,10 @@
 package com.pmacademy.githubclient.data.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class ReadmeResponse(
-    @SerialName("content")
+    @SerializedName("content")
     val content: String,
-    @SerialName("encoding")
+    @SerializedName("encoding")
     val encoding: String
 )

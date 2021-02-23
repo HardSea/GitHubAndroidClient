@@ -1,16 +1,15 @@
 package com.pmacademy.githubclient.data.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-@Serializable
 data class IssueResponse(
-    @SerialName("user")
+    @SerializedName("user")
     val author: UserResponse,
-    @SerialName("title")
+    @SerializedName("title")
     val title: String,
-    @SerialName("body")
+    @SerializedName("body")
     val body: String,
-    @SerialName("number")
+    @SerializedName("number")
     val number: Int
-): java.io.Serializable
+) : Serializable

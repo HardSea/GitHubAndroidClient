@@ -2,15 +2,16 @@ package com.pmacademy.githubclient.ui.fragments
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.databinding.RepositoryInfoFragmentBinding
+import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.ContributorsListAdapter
 import com.pmacademy.githubclient.ui.adapter.IssueListAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
@@ -68,22 +69,49 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
     private fun observeLiveData() {
         viewModel.contributorsLiveData.observe(viewLifecycleOwner, { contributorsList ->
             if (contributorsList.isError) {
-                Log.d("TAG111", "ERROR")
+                if (contributorsList.errorResult == GithubError.UNAUTHORIZED) {
+                    navigator.showLoginFragment()
+                    Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error when get repo contributors",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
             } else {
                 contributorsListAdapter.updateContributorsList(contributorsList.successResult)
             }
         })
         viewModel.issuesLiveData.observe(viewLifecycleOwner, { issuesList ->
             if (issuesList.isError) {
-                Log.d("TAG111", "ERROR")
+                if (issuesList.errorResult == GithubError.UNAUTHORIZED) {
+                    navigator.showLoginFragment()
+                    Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error when get repo contributors",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
             } else {
                 issuesListAdapter.updateIssuesList(issuesList.successResult)
             }
         })
         viewModel.readmeLiveData.observe(viewLifecycleOwner, { readmeText ->
             if (readmeText.isError) {
-                Log.d("TAG111", "ERROR")
-                showReadmeError()
+                if (readmeText.errorResult == GithubError.UNAUTHORIZED) {
+                    navigator.showLoginFragment()
+                    Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    showReadmeError()
+                }
             } else {
                 showReadme(readmeText.successResult)
             }

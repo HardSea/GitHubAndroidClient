@@ -37,12 +37,17 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
     private fun saveUserToken(code: String) {
         GlobalScope.launch {
+
+
+            Log.d("TAGtest", "saveUserToken: $code")
             val response = githubUtils.getAccessToken(code)
+
             val token = "${response.tokenType} ${response.accessToken}"
+
+            Log.d("TAGtest", "saveUserToken: $token")
             sharedPreferences.token = token
 
             user = githubUtils.getUser(token).successResult
-
             saveUserToSharedPreference()
             navigator.showUserInfoFragment(user, addToBackStack = false)
             requireActivity().intent.data = null

@@ -1,13 +1,10 @@
 package com.pmacademy.myapplicationtemp.data
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class ReposResponse(
-
-    @SerialName("name")
+    @SerializedName("name")
     val name: String,
-    @SerialName("id")
+    @SerializedName("id")
     val id: Int
 )
