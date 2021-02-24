@@ -4,10 +4,8 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
 import com.pmacademy.githubclient.data.model.IssueResponse
 import com.pmacademy.githubclient.data.model.UserResponse
-import com.pmacademy.githubclient.ui.fragments.IssueInfoFragment
-import com.pmacademy.githubclient.ui.fragments.LoginFragment
-import com.pmacademy.githubclient.ui.fragments.ReposInfoFragment
-import com.pmacademy.githubclient.ui.fragments.UserInfoFragment
+import com.pmacademy.githubclient.data.model.UsersSearchResponce
+import com.pmacademy.githubclient.ui.fragments.*
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalSerializationApi
@@ -53,4 +51,12 @@ class FragmentNavigator(
         if (addToBackStack) transaction.addToBackStack(null)
         transaction.commit()
     }
+
+    fun showUsersSearchFragment(addToBackStack: Boolean = true) {
+        val transaction = fragmentManager.beginTransaction()
+            .replace(container, UsersSearchFragment.newInstance())
+        if (addToBackStack) transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
 }

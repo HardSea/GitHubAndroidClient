@@ -43,7 +43,7 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         initRecyclerView()
         binding.tvUserName.text = user.login
         viewModel.getUserReposList(user = user, authToken = sharedPreferences.token)
-
+        goToUserSearchPage()
     }
 
     private fun loadAvatar(imageUrl: String) {
@@ -118,6 +118,12 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
             val bundle = Bundle()
             bundle.putSerializable(KEY_USER, user)
             this.arguments = bundle
+        }
+    }
+
+    private fun goToUserSearchPage(){
+        binding.btnSerach.setOnClickListener {
+            navigator.showUsersSearchFragment()
         }
     }
 }
