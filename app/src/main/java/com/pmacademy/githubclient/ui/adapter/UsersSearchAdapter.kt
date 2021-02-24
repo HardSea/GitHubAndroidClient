@@ -6,14 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
-import com.pmacademy.myapplicationtemp.data.ReposResponse
 
 
 private class SearchItemDiffCallback : DiffUtil.ItemCallback<UserResponse>() {
@@ -31,7 +28,7 @@ class UsersSearchAdapter(private val searchClickListener: (String) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.test_item, parent, false)
+            .inflate(R.layout.user_search_item, parent, false)
         Log.d("SearchLog", "UsersSearchAdapter -> onCreateViewHolder()")
         return UserListViewHolder(view)
     }
