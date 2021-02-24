@@ -1,6 +1,5 @@
 package com.pmacademy.githubclient.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,19 +21,18 @@ private class ContributorItemDiffCallback : DiffUtil.ItemCallback<UserResponse>(
     }
 }
 
-class ContributorsListAdapter(private val contributorClickListener: (UserResponse) -> Unit) :
+class ContributorsAdapter(private val contributorClickListener: (UserResponse) -> Unit) :
     ListAdapter<UserResponse, RecyclerView.ViewHolder>(ContributorItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.view_holder_contributors_item, parent, false)
-        return ContributorsListViewHolder(view)
+        return ContributorsViewHolder(view)
     }
-
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ContributorsListViewHolder -> holder.bind(
+            is ContributorsViewHolder -> holder.bind(
                 getItem(position),
                 contributorClickListener
             )
@@ -45,8 +43,7 @@ class ContributorsListAdapter(private val contributorClickListener: (UserRespons
         this.submitList(list)
     }
 
-    class ContributorsListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+    class ContributorsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private var tvContributorName: TextView? = null
 
         init {
@@ -56,11 +53,9 @@ class ContributorsListAdapter(private val contributorClickListener: (UserRespons
         fun bind(contributorUser: UserResponse, onContributorClick: (UserResponse) -> Unit) {
             tvContributorName?.text = contributorUser.login
             itemView.setOnClickListener {
-                Log.d("TAG444", "bind: $contributorUser")
                 onContributorClick.invoke(contributorUser)
             }
         }
     }
-
 }
 

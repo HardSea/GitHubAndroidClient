@@ -63,14 +63,12 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
         setupView()
     }
 
-
     private fun setupView() {
         binding.tvIssueAuthor.text = userName
         binding.tvIssueTitle.text = issue.title
         binding.tvIssueBody.text = issue.body
         binding.tvIssueBody.movementMethod = ScrollingMovementMethod()
     }
-
 
     private fun observeIssueCommentsLiveData() {
         viewModel.issueCommentsLiveData.observe(viewLifecycleOwner, { issueComments ->
@@ -86,10 +84,18 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
 
         viewModel.createReactionResultLiveData.observe(viewLifecycleOwner, { createReactionResult ->
             if (createReactionResult.isError) {
-                Toast.makeText(requireContext(), "Create reaction are failed", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.create_reaction_fail_text),
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             } else {
-                Toast.makeText(requireContext(), "Create reaction successful", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.create_reaction_success_text),
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
         })
@@ -98,11 +104,17 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
     private fun handleError(errorResult: GithubError) {
         if (errorResult == GithubError.UNAUTHORIZED) {
             navigator.showLoginFragment()
-            Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.need_authorization_text),
+                Toast.LENGTH_SHORT
+            )
                 .show()
         } else {
             Toast.makeText(
-                requireContext(), "Error when get issue comments", Toast.LENGTH_SHORT
+                requireContext(),
+                getString(R.string.error_get_issue_comments_text),
+                Toast.LENGTH_SHORT
             ).show()
         }
     }
@@ -132,7 +144,6 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
             binding.rvIssueComments.addItemDecoration(itemDecoration)
         }
     }
-
 
     companion object {
         private const val KEY_ISSUE = "KEY_ISSUE"

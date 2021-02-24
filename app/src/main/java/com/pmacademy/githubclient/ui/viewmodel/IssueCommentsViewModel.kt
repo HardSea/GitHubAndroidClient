@@ -32,7 +32,6 @@ class IssueCommentsViewModel : ViewModel() {
     }
 
     fun getIssueComments(userName: String, repoName: String, issueNumber: Int, authToken: String) {
-
         viewModelScope.launch(Dispatchers.IO) {
             val repos = githubUtils.getIssueCommentsList(
                 owner = userName,
@@ -54,8 +53,6 @@ class IssueCommentsViewModel : ViewModel() {
         clickType: ReactionType
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-
-
             val result = githubUtils.createReactionForIssueComment(
                 owner = userName,
                 repo = repoName,

@@ -1,6 +1,5 @@
 package com.pmacademy.githubclient.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.IssueCommentResponse
 import com.pmacademy.githubclient.data.model.ReactionType
 
-private class IssueCommentsDiffCallback : DiffUtil.ItemCallback<IssueCommentResponse>() {
+private class IssueCommentDiffCallback : DiffUtil.ItemCallback<IssueCommentResponse>() {
     override fun areItemsTheSame(
         oldItem: IssueCommentResponse,
         newItem: IssueCommentResponse
@@ -29,7 +28,7 @@ private class IssueCommentsDiffCallback : DiffUtil.ItemCallback<IssueCommentResp
 }
 
 class IssueCommentsAdapter(private val issueClickListener: (IssueCommentResponse, ReactionType) -> Unit) :
-    ListAdapter<IssueCommentResponse, RecyclerView.ViewHolder>(IssueCommentsDiffCallback()) {
+    ListAdapter<IssueCommentResponse, RecyclerView.ViewHolder>(IssueCommentDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -37,9 +36,7 @@ class IssueCommentsAdapter(private val issueClickListener: (IssueCommentResponse
         return IssueCommentsListViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Log.d("TAG111", "${getItem(position)}")
         when (holder) {
             is IssueCommentsListViewHolder -> holder.bind(getItem(position), issueClickListener)
         }
@@ -50,7 +47,6 @@ class IssueCommentsAdapter(private val issueClickListener: (IssueCommentResponse
     }
 
     class IssueCommentsListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         private var tvIssueCommentBody: TextView? = null
         private var tvLike: TextView? = null
         private var tvDislike: TextView? = null
@@ -60,7 +56,6 @@ class IssueCommentsAdapter(private val issueClickListener: (IssueCommentResponse
         private var tvHooray: TextView? = null
         private var tvRocket: TextView? = null
         private var tvEyes: TextView? = null
-
 
         init {
             tvIssueCommentBody = view.findViewById(R.id.tv_issue_comment_body)
@@ -78,50 +73,32 @@ class IssueCommentsAdapter(private val issueClickListener: (IssueCommentResponse
             issueCommentItem: IssueCommentResponse,
             onReposClick: (IssueCommentResponse, ReactionType) -> Unit
         ) {
-
             tvIssueCommentBody?.text = issueCommentItem.body
-            tvLike?.setOnClickListener { onReposClick.invoke(issueCommentItem, ReactionType.LIKE) }
+            tvLike?.setOnClickListener {
+                onReposClick.invoke(issueCommentItem, ReactionType.LIKE)
+            }
             tvDislike?.setOnClickListener {
-                onReposClick.invoke(
-                    issueCommentItem,
-                    ReactionType.DISLIKE
-                )
+                onReposClick.invoke(issueCommentItem, ReactionType.DISLIKE)
             }
             tvLaugh?.setOnClickListener {
-                onReposClick.invoke(
-                    issueCommentItem,
-                    ReactionType.LAUGH
-                )
+                onReposClick.invoke(issueCommentItem, ReactionType.LAUGH)
             }
             tvConfused?.setOnClickListener {
-                onReposClick.invoke(
-                    issueCommentItem,
-                    ReactionType.CONFUSED
-                )
+                onReposClick.invoke(issueCommentItem, ReactionType.CONFUSED)
             }
             tvHeart?.setOnClickListener {
-                onReposClick.invoke(
-                    issueCommentItem,
-                    ReactionType.HEART
-                )
+                onReposClick.invoke(issueCommentItem, ReactionType.HEART)
             }
             tvHooray?.setOnClickListener {
-                onReposClick.invoke(
-                    issueCommentItem,
-                    ReactionType.HOORAY
-                )
+                onReposClick.invoke(issueCommentItem, ReactionType.HOORAY)
             }
             tvRocket?.setOnClickListener {
-                onReposClick.invoke(
-                    issueCommentItem,
-                    ReactionType.ROCKET
-                )
+                onReposClick.invoke(issueCommentItem, ReactionType.ROCKET)
             }
-            tvEyes?.setOnClickListener { onReposClick.invoke(issueCommentItem, ReactionType.EYES) }
-
-
+            tvEyes?.setOnClickListener {
+                onReposClick.invoke(issueCommentItem, ReactionType.EYES)
+            }
         }
     }
-
 }
 

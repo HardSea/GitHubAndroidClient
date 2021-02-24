@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pmacademy.githubclient.R
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 
-private class ReposItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
+private class RepoItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
     override fun areItemsTheSame(oldItem: ReposResponse, newItem: ReposResponse): Boolean {
         return oldItem == newItem
     }
@@ -20,15 +20,14 @@ private class ReposItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
     }
 }
 
-class ReposListAdapter(private val reposClickListener: (String) -> Unit) :
-    ListAdapter<ReposResponse, RecyclerView.ViewHolder>(ReposItemDiffCallback()) {
+class ReposAdapter(private val reposClickListener: (String) -> Unit) :
+    ListAdapter<ReposResponse, RecyclerView.ViewHolder>(RepoItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.view_holder_repos_item, parent, false)
         return ReposListViewHolder(view)
     }
-
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
@@ -41,7 +40,6 @@ class ReposListAdapter(private val reposClickListener: (String) -> Unit) :
     }
 
     class ReposListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         private var tvReposName: TextView? = null
 
         init {
@@ -55,7 +53,6 @@ class ReposListAdapter(private val reposClickListener: (String) -> Unit) :
             }
         }
     }
-
 }
 
 
