@@ -76,7 +76,6 @@ interface GitHubServiceApi {
     @GET("/search/users")
     suspend fun getUsersSearch(
         @Header("Authorization") auth: String,
-        @Path("users") users: String,
+        @Path("users") userName: String,
     ): List<UsersSearchResponce>
-
 }

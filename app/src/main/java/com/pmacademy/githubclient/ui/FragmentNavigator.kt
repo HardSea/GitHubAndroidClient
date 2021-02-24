@@ -52,9 +52,9 @@ class FragmentNavigator(
         transaction.commit()
     }
 
-    fun showUsersSearchFragment(addToBackStack: Boolean = true) {
+    fun showUsersSearchFragment(/*user: UsersSearchResponce,*/ addToBackStack: Boolean = true) {
         val transaction = fragmentManager.beginTransaction()
-            .replace(container, UsersSearchFragment.newInstance())
+            .replace(container, UsersSearchFragment.newInstance(/*user*/))
         if (addToBackStack) transaction.addToBackStack(null)
         transaction.commit()
     }
