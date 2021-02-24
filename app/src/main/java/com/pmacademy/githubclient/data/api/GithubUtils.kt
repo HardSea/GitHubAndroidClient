@@ -199,4 +199,16 @@ class GithubUtils {
             githubInterceptor.getError(e)
         }
     }
+
+    /// usersSearch
+    suspend fun getUsersSearch(
+        users: String,
+        authToken: String
+    ): Result<List<UsersSearchResponce>, GithubError> {
+        return try {
+            Result.success(apiGithubService.getUsersSearch(users = users, auth = authToken))
+        } catch (e: Exception) {
+            githubInterceptor.getError(e)
+        }
+    }
 }
