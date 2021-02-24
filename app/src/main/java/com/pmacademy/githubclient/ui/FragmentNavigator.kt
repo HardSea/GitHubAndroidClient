@@ -4,7 +4,6 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
 import com.pmacademy.githubclient.data.model.IssueResponse
 import com.pmacademy.githubclient.data.model.UserResponse
-import com.pmacademy.githubclient.data.model.UsersSearchResponce
 import com.pmacademy.githubclient.ui.fragments.*
 import kotlinx.serialization.ExperimentalSerializationApi
 
@@ -52,11 +51,11 @@ class FragmentNavigator(
         transaction.commit()
     }
 
-    fun showUsersSearchFragment(/*user: UsersSearchResponce,*/ addToBackStack: Boolean = true) {
+    fun showUsersSearchFragment(/*user: UsersSearchResponce,*/ /*addToBackStack: Boolean = true*/) {
         val transaction = fragmentManager.beginTransaction()
             .replace(container, UsersSearchFragment.newInstance(/*user*/))
-        if (addToBackStack) transaction.addToBackStack(null)
-        transaction.commit()
+             transaction.addToBackStack(null)
+             transaction.commit()
     }
 
 }

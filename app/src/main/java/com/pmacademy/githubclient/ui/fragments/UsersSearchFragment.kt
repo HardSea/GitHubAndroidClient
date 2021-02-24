@@ -1,6 +1,7 @@
 package com.pmacademy.githubclient.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +10,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.pmacademy.githubclient.R
-import com.pmacademy.githubclient.data.model.UsersSearchResponce
+import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.FragmentUsersSearchBinding
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.UsersSearchAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import com.pmacademy.githubclient.ui.viewmodel.UsersSearchViewModel
-import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 
 
@@ -24,16 +24,19 @@ class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
 
     private lateinit var binding: FragmentUsersSearchBinding
     private val viewModel: UsersSearchViewModel by viewModels()
-    lateinit var usersSearchAdapter: UsersSearchAdapter
-  //  private lateinit var user: UsersSearchResponce
+    var usersSearchAdapter: UsersSearchAdapter = UsersSearchAdapter { reposName ->
+        navigator.showProjectInfoFragment(reposName, user.login)
+    }
+    private lateinit var user: UserResponse
 
     companion object {
         private const val KEY_USER1 = "KEY_USER1"
 
         fun newInstance(): UsersSearchFragment = UsersSearchFragment().apply {
             val bundle = Bundle()
-          // bundle.putSerializable(KEY_USER1, user)
+            // bundle.putSerializable(KEY_USER1, user)
             this.arguments = bundle
+            Log.d("StarWars", "UsersSearchFragment ->  companion object -> newInstance()")
         }
     }
 
@@ -43,8 +46,9 @@ class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentUsersSearchBinding.inflate(inflater, container, false)
+        Log.d("StarWars", "UsersSearchFragment ->  onCreateView()")
         return binding.root
-        initRecyclerViews()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,7 +56,8 @@ class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
 
         setupButtonListener(sharedPreferences.token)
         observeGitHubRepos()
-        //initRecyclerViews()
+        initRecyclerViews()
+        Log.d("StarWars", "UsersSearchFragment ->  onViewCreated()")
     }
 
     private fun setupButtonListener(authToken: String) {
@@ -63,45 +68,63 @@ class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
 
     private fun getUsersSearch(authToken: String) {
         viewModel.getUsersSearch(getUserName(), authToken)
-        setupFragmentView(getUserName())
+        //setupFragmentView(getUserName())
     }
 
     private fun getUserName(): String {
         val username1 = binding.etSearch.text.toString()
-        if (username1.isNotEmpty()){
+        if (username1.isNotEmpty()) {
             return username1
-        }else {
-            Toast.makeText(context, "UserName field is empty" ,Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(context, "UserName field is empty", Toast.LENGTH_LONG).show()
             return "Not name"
         }
-    }
-
-    private fun setupFragmentView(userName:String) {
-        binding.tvUserName.text = "5"
-        binding.tvURL.text = viewModel.userSearchLiveData.value.toString()
-        loadAvatar("https://www.thoughtco.com/thmb/pu-0U6Z--3DBkmbSFEU2UwC34EM=/2795x2096/smart/filters:no_upscale()/acat-874e4928f96e4e96bec0b1723ca5a909.jpg")
-    }
-
-    private fun loadAvatar(imageUrl: String) {
-        Glide.with(requireContext())
-            .load(imageUrl)
-            .circleCrop()
-            .into(binding.ivLogo)
     }
 
     private fun initRecyclerViews() {
         binding.rvTest.adapter = usersSearchAdapter
         binding.rvTest.layoutManager = LinearLayoutManager(context)
-    }
-
-    private fun updateGitHubRepos(items: List<UsersSearchResponce>) {
-        usersSearchAdapter?.updateAdapter(items)
+        Log.d("SearchLog", "UsersSearchFragment ->  initRecyclerViews()")
     }
 
     private fun observeGitHubRepos() {
         viewModel.userSearchLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            updateGitHubRepos(it.successResult)
+            if (!it.isLoading) {
+                if (it.isError) {
+                    handleError(it.errorResult)
+                    Log.d(
+                        "SearchLog",
+                        "UsersSearchFragment ->  observeGitHubRepos() -> observe()-> if (errorResult)"
+                    )
+                } else {
+                    Log.d(
+                        "SearchLog",
+                        "UsersSearchFragment ->  observeGitHubRepos() -> observe()-> else (successResult)"
+                    )
+                    updateSearchUsers(it.successResult)
+                }
+            }
         })
+    }
+
+    private fun handleError(errorResult: GithubError) {
+        when (errorResult) {
+            GithubError.UNAUTHORIZED -> {
+                Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT).show()
+                navigator.showLoginFragment()
+            }
+            else ->  Log.d(
+                    "SearchLog",
+                    "UsersSearchFragment ->  handleError() -> when (errorResult)-> else ($errorResult)")
+        }
+    }
+
+    private fun updateSearchUsers(items: List<UserResponse>) {
+        if (items.isNotEmpty()) {
+            usersSearchAdapter.updateUsersList(items)
+        } else {
+            Log.d("SearchLog", "updateReposList -> showEmptyReposTitle()")
+        }
     }
 
 }

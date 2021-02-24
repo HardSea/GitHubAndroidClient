@@ -73,9 +73,9 @@ interface GitHubServiceApi {
 
     /////////  usersSearch
     @Headers("Accept: application/vnd.github.v3+json")
-    @GET("/users/{users}")
+    @GET("search/users")
     suspend fun getUsersSearch(
         @Header("Authorization") auth: String,
-        @Path("users") userName: String,
-    ): List<UsersSearchResponce>
+        @Query("q") userName: String,
+    ): List<UserResponse>
 }

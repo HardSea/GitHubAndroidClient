@@ -1,50 +1,68 @@
 package com.pmacademy.githubclient.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.pmacademy.githubclient.R
-import com.pmacademy.githubclient.data.model.UsersSearchResponce
-import com.pmacademy.githubclient.databinding.TestItemBinding
-
-class UsersSearchAdapter : RecyclerView.Adapter<PostsViewHolder>()  {
-    lateinit var binding: TestItemBinding
+import com.pmacademy.githubclient.data.model.UserResponse
+import com.pmacademy.myapplicationtemp.data.ReposResponse
 
 
-    private val items = mutableListOf<UsersSearchResponce>()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostsViewHolder {
-       return PostsViewHolder(
-           LayoutInflater.from(parent.context).inflate(
-               R.layout.test_item, parent, false
-           )
-       )
+private class SearchItemDiffCallback : DiffUtil.ItemCallback<UserResponse>() {
+    override fun areItemsTheSame(oldItem: UserResponse, newItem: UserResponse): Boolean {
+        return oldItem == newItem
     }
 
-    override fun getItemCount() = items.size
-
-
-    override fun onBindViewHolder(holder: PostsViewHolder, position: Int) {
-        val article = items[position]
-        holder.tv_test1?.text = article.name
+    override fun areContentsTheSame(oldItem: UserResponse, newItem: UserResponse): Boolean {
+        return oldItem.login == newItem.login
     }
-    fun updateAdapter(newList: List<UsersSearchResponce>) {
-        items.clear()
-        items.addAll(newList)
-        notifyDataSetChanged()
-    }
-
 }
 
- class PostsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-     var tv_test1: TextView? = null
+class UsersSearchAdapter(private val searchClickListener: (String) -> Unit) :
+    ListAdapter<UserResponse, RecyclerView.ViewHolder>(SearchItemDiffCallback()) {
 
-     init {
-         tv_test1 = itemView?.findViewById(R.id.tv_test1)
-     }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.test_item, parent, false)
+        Log.d("SearchLog", "UsersSearchAdapter -> onCreateViewHolder()")
+        return UserListViewHolder(view)
+    }
 
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is UserListViewHolder -> holder.bind(getItem(position), searchClickListener)
+           /* Log.d("StarWars", "UsersSearchAdapter -> onBindViewHolder()")*/
+        }
+    }
 
- }
+    fun updateUsersList(list: List<UserResponse>) {
+        Log.d("SearchLog", "UsersSearchAdapter -> updateUsersList()")
+        this.submitList(list)
+    }
+
+    class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private var tvUserLoginSearch: TextView? = null
+        private var ivLogo: ImageView? = null
+        init {
+            Log.d("SearchLog", "UserListViewHolder -> init")
+            tvUserLoginSearch = view.findViewById(R.id.tvUserLoginSearch)
+            ivLogo = view.findViewById(R.id.ivLogo)
+        }
+
+        fun bind(user: UserResponse, onReposClick: (String) -> Unit) {
+            tvUserLoginSearch?.text = user.login
+            itemView.setOnClickListener {
+                Log.d("SearchLog", "UserListViewHolder -> bind() -> setOnClickListener()")
+                onReposClick.invoke(user.login)
+            }
+        }
+    }
+}

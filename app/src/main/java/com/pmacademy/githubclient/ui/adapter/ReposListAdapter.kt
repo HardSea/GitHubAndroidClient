@@ -27,13 +27,13 @@ class ReposListAdapter(private val reposClickListener: (String) -> Unit) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.view_holder_repos_item, parent, false)
-        return ReposListViewHolder(view)
+        return UserListViewHolder(view)
     }
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ReposListViewHolder -> holder.bind(getItem(position), reposClickListener)
+            is UserListViewHolder -> holder.bind(getItem(position), reposClickListener)
         }
     }
 
@@ -41,7 +41,7 @@ class ReposListAdapter(private val reposClickListener: (String) -> Unit) :
         this.submitList(list)
     }
 
-    class ReposListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private var tvReposName: TextView? = null
 
