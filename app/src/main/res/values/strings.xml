@@ -17,4 +17,8 @@
     <string name="issues_list_are_empty">Issues list are empty</string>
     <string name="this_repository_empty_text">This repository is empty</string>
     <string name="the_list_of_repositories_is_empty">The list of repositories is empty</string>
+    <string name="create_reaction_fail_text">Create reaction are failed</string>
+    <string name="create_reaction_success_text">Create reaction successful</string>
+    <string name="need_authorization_text">Need authorization</string>
+    <string name="error_get_issue_comments_text">Error when get issue comments</string>
 </resources>

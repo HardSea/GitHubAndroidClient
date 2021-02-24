@@ -1,6 +1,5 @@
 package com.pmacademy.githubclient.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,7 @@ private class IssueItemDiffCallback : DiffUtil.ItemCallback<IssueResponse>() {
     }
 }
 
-class IssueListAdapter(private val issueClickListener: (IssueResponse) -> Unit) :
+class IssueAdapter(private val issueClickListener: (IssueResponse) -> Unit) :
     ListAdapter<IssueResponse, RecyclerView.ViewHolder>(IssueItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -30,9 +29,7 @@ class IssueListAdapter(private val issueClickListener: (IssueResponse) -> Unit) 
         return IssuesListViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Log.d("TAG111", "${getItem(position)}")
         when (holder) {
             is IssuesListViewHolder -> holder.bind(getItem(position), issueClickListener)
         }
@@ -43,7 +40,6 @@ class IssueListAdapter(private val issueClickListener: (IssueResponse) -> Unit) 
     }
 
     class IssuesListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         private var tvIssueTitle: TextView? = null
 
         init {
@@ -51,14 +47,11 @@ class IssueListAdapter(private val issueClickListener: (IssueResponse) -> Unit) 
         }
 
         fun bind(issueItem: IssueResponse, onReposClick: (IssueResponse) -> Unit) {
-
-            Log.d("TAG111", issueItem.title)
             tvIssueTitle?.text = issueItem.title
             itemView.setOnClickListener {
                 onReposClick.invoke(issueItem)
             }
         }
     }
-
 }
 

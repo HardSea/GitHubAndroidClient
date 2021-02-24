@@ -3,7 +3,6 @@ package com.pmacademy.githubclient.data.pref
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import com.pmacademy.githubclient.data.model.UserResponse
 
 class SharedPref(context: Context) {
 
@@ -21,9 +20,11 @@ class SharedPref(context: Context) {
     var token: String by SharedPrefDelegate(sharedPreferences, KEY_TOKEN, "")
 
     var localUserName: String by SharedPrefDelegate(sharedPreferences, KEY_LOCAL_USER_NAME, "")
-    var localUserAvatarUrl: String by SharedPrefDelegate(sharedPreferences, KEY_LOCAL_USER_AVATAR_URL, "")
-
+    var localUserAvatarUrl: String by SharedPrefDelegate(
+        sharedPreferences,
+        KEY_LOCAL_USER_AVATAR_URL,
+        ""
+    )
 
     val bool: Boolean by SharedPrefDelegate(sharedPreferences, KEY_LAST, true)
-
 }

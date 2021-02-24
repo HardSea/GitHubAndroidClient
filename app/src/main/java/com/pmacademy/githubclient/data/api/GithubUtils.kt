@@ -1,7 +1,6 @@
 package com.pmacademy.githubclient.data.api
 
 import android.net.Uri
-import android.util.Log
 import com.google.gson.JsonParser
 import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.githubclient.tools.GithubError
@@ -51,7 +50,7 @@ class GithubUtils {
         createRetrofit(apiHost).create(GitHubServiceApi::class.java)
     }
 
-    fun buildAuthGitHubUrl(): Uri {
+    fun buildAuthGithubUrl(): Uri {
         return Uri.Builder()
             .scheme(schema)
             .authority(loginHost)
@@ -82,7 +81,7 @@ class GithubUtils {
         }
     }
 
-    suspend fun getUserReposList(
+    suspend fun getUserRepoList(
         username: String,
         authToken: String
     ): Result<List<ReposResponse>, GithubError> {
@@ -119,11 +118,8 @@ class GithubUtils {
         authToken: String
     ): Result<String, GithubError> {
         return try {
-            val readme = apiGithubService.getRepoReadme(
-                owner = owner,
-                repo = repo,
-                auth = authToken
-            )
+            val readme =
+                apiGithubService.getRepoReadme(owner = owner, repo = repo, auth = authToken)
             val encodeReadme = StringDecoder().decodeText(readme.content, readme.encoding)
             return Result.success(encodeReadme)
         } catch (e: Exception) {
@@ -131,37 +127,28 @@ class GithubUtils {
         }
     }
 
-    suspend fun getReposContributors(
+    suspend fun getRepoContributors(
         owner: String,
         repo: String,
         authToken: String
     ): Result<List<UserResponse>, GithubError> {
         return try {
             Result.success(
-                apiGithubService.getReposContributors(
-                    owner = owner,
-                    repo = repo,
-                    auth = authToken
-                )
+                apiGithubService.getRepoContributors(owner = owner, repo = repo, auth = authToken)
             )
         } catch (e: Exception) {
-            Log.d("tagsss", "getReposContributors: $e")
             githubInterceptor.getError(e)
         }
     }
 
-    suspend fun getReposIssues(
+    suspend fun getRepoIssues(
         owner: String,
         repo: String,
         authToken: String
     ): Result<List<IssueResponse>, GithubError> {
         return try {
             Result.success(
-                apiGithubService.getReposIssues(
-                    owner = owner,
-                    repo = repo,
-                    auth = authToken
-                )
+                apiGithubService.getRepoIssues(owner = owner, repo = repo, auth = authToken)
             )
         } catch (e: Exception) {
             githubInterceptor.getError(e)
@@ -176,23 +163,12 @@ class GithubUtils {
         clickType: ReactionType
     ): Result<Boolean, GithubError> {
         return try {
-            val reactionString = when (clickType) {
-                ReactionType.LIKE -> "+1"
-                ReactionType.DISLIKE -> "-1"
-                ReactionType.LAUGH -> "laugh"
-                ReactionType.CONFUSED -> "confused"
-                ReactionType.HEART -> "heart"
-                ReactionType.HOORAY -> "hooray"
-                ReactionType.ROCKET -> "rocket"
-                ReactionType.EYES -> "eyes"
-            }
-
             apiGithubService.createReactionForIssueComment(
                 owner = owner,
                 repo = repo,
                 auth = authToken,
                 commentId = commentId,
-                reaction = JsonParser().parse("{\"content\": \"$reactionString\"}").asJsonObject
+                reaction = JsonParser().parse("{\"content\": \"${clickType.textReaction}\"}").asJsonObject
             )
             Result.success(true)
         } catch (e: Exception) {
