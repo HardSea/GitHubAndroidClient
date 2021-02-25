@@ -70,4 +70,11 @@ interface GitHubServiceApi {
         @Path("comment_id") commentId: Int,
         @Body reaction: JsonObject
     )
+
+    @Headers("Accept: application/vnd.github.v3+json")
+    @GET("search/users")
+    suspend fun getUsersSearch(
+        @Header("Authorization") auth: String,
+        @Query("q") q: String,
+    ): SearchResponse
 }

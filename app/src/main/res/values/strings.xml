@@ -21,4 +21,8 @@
     <string name="create_reaction_success_text">Create reaction successful</string>
     <string name="need_authorization_text">Need authorization</string>
     <string name="error_get_issue_comments_text">Error when get issue comments</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btnSearch">search</string>
+    <string name="search_button_text">Search</string>
 </resources>

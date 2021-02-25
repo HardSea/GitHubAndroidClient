@@ -14,19 +14,21 @@ class GetRepoInfoModelUseCase {
         authToken: String,
         githubUtils: GithubUtils
     ): Result<RepoInfoModel, GithubError> {
-        val contributorsList = githubUtils.getRepoContributors(
+        val contributorsList = githubUtils.getReposContributors(
             owner = userName,
             repo = repoName,
             authToken = authToken
         )
         val issueList =
-            githubUtils.getRepoIssues(owner = userName, repo = repoName, authToken = authToken)
+            githubUtils.getReposIssues(owner = userName, repo = repoName, authToken = authToken)
 
         val readmeText =
             githubUtils.getRepoReadme(owner = userName, repo = repoName, authToken = authToken)
 
         val readmeTextReturn = if (readmeText.isError) "" else readmeText.successResult
+
         if (contributorsList.isError) return Result.error(contributorsList.errorResult)
+
         if (issueList.isError) return Result.error(issueList.errorResult)
 
         return Result.success(

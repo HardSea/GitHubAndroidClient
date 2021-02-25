@@ -30,7 +30,7 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
     }
 
     private fun startGitHubLogin() {
-        val authIntent = Intent(Intent.ACTION_VIEW, githubUtils.buildAuthGithubUrl())
+        val authIntent = Intent(Intent.ACTION_VIEW, githubUtils.buildAuthGitHubUrl())
         startActivity(authIntent)
     }
 
@@ -61,8 +61,6 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
     companion object {
         private val TAG = LoginFragment::class.java.simpleName
-        fun newInstance(): LoginFragment {
-            return LoginFragment()
-        }
+        fun newInstance(): LoginFragment = LoginFragment()
     }
 }
