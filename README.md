@@ -9,7 +9,7 @@ This program has a user search with the ability to view their repositories. You 
 
 * [Kotlin](https://kotlinlang.org/)
 * [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/index.html)
-* [MVVM] (https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
+* [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
 * [Glide](https://github.com/bumptech/glide)
 * [Retrofit](http://square.github.io/retrofit/)
 * [OkHttp](http://square.github.io/okhttp/)
