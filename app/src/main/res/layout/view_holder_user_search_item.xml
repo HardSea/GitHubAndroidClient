@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="15dp"
-    android:paddingBottom="15dp">
+    android:paddingTop="@dimen/user_search_holder_padding"
+    android:paddingBottom="@dimen/user_search_holder_padding">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_user_avatar"

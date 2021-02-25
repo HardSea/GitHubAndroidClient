@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.UserInfoFragmentBinding
-import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.ReposListAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import com.pmacademy.githubclient.ui.viewmodel.UserInfoViewModel
@@ -71,36 +70,23 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         binding.rvListRepositories.visibility = View.INVISIBLE
     }
 
-    private fun showErrorMessage(error: String) {
+    override fun showErrorMessage(@StringRes errorRes: Int) {
         binding.progressBarLoading.visibility = View.INVISIBLE
         binding.tvErrorMessage.visibility = View.VISIBLE
-        binding.tvErrorMessage.text = error
+        binding.tvErrorMessage.text = getString(errorRes)
     }
 
     private fun observeReposLiveData() {
         viewModel.reposLiveData.observe(viewLifecycleOwner, { reposList ->
-            if (!reposList.isLoading) {
-                if (reposList.isError) {
-                    handleError(reposList.errorResult)
-                } else {
-                    loadAvatar(user.avatarUrl)
-                    showAllViewsHideProgressBar()
-                    updateReposList(reposList.successResult)
-                }
+            if (reposList.isError) {
+                handleError(reposList.errorResult)
+            } else {
+                loadAvatar(user.avatarUrl)
+                showAllViewsHideProgressBar()
+                updateReposList(reposList.successResult)
             }
         })
     }
-
-    private fun handleError(errorResult: GithubError) {
-        when (errorResult) {
-            GithubError.UNAUTHORIZED -> {
-                Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT).show()
-                navigator.showLoginFragment()
-            }
-            else -> showErrorMessage(errorResult.toString())
-        }
-    }
-
 
     private fun showAllViewsHideProgressBar() {
         binding.tvUserName.visibility = View.VISIBLE
@@ -112,7 +98,7 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         binding.progressBarLoading.visibility = View.GONE
     }
 
-    private fun initListeners(){
+    private fun initListeners() {
         binding.btnSearch.setOnClickListener {
             navigator.showUsersSearchFragment()
         }
@@ -127,6 +113,4 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
             this.arguments = bundle
         }
     }
-
-
 }

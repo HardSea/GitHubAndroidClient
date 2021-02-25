@@ -14,7 +14,6 @@ import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.IssueCommentResponse
 import com.pmacademy.githubclient.data.model.IssueResponse
 import com.pmacademy.githubclient.databinding.IssueInfoFragmentBinding
-import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.IssueCommentsAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import com.pmacademy.githubclient.ui.viewmodel.IssueCommentsViewModel
@@ -101,22 +100,12 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
         })
     }
 
-    private fun handleError(errorResult: GithubError) {
-        if (errorResult == GithubError.UNAUTHORIZED) {
-            navigator.showLoginFragment()
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.need_authorization_text),
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        } else {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.error_get_issue_comments_text),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+    override fun showErrorMessage(errorRes: Int) {
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.error_get_issue_comments_text),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun showAllViewsHideProgressBar() {

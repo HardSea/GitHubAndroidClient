@@ -1,17 +1,14 @@
 package com.pmacademy.githubclient.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.FragmentUsersSearchBinding
-import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.adapter.UsersSearchAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import com.pmacademy.githubclient.ui.viewmodel.UsersSearchViewModel
@@ -23,13 +20,10 @@ class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
 
     private lateinit var binding: FragmentUsersSearchBinding
     private val viewModel: UsersSearchViewModel by viewModels()
-    var usersSearchAdapter: UsersSearchAdapter = UsersSearchAdapter { user ->
+    private var usersSearchAdapter: UsersSearchAdapter = UsersSearchAdapter { user ->
         navigator.showUserInfoFragment(user)
     }
 
-    companion object {
-        fun newInstance(): UsersSearchFragment = UsersSearchFragment()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,25 +68,19 @@ class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
         })
     }
 
-    private fun handleError(errorResult: GithubError) {
-        when (errorResult) {
-            GithubError.UNAUTHORIZED -> {
-                Toast.makeText(requireContext(), "Need authorization", Toast.LENGTH_SHORT).show()
-                navigator.showLoginFragment()
-            }
-            else -> Log.d(
-                "SearchLog",
-                "UsersSearchFragment ->  handleError() -> when (errorResult)-> else ($errorResult)"
-            )
-        }
+    override fun showErrorMessage(errorRes: Int) {
+        binding.rvResultSearch.visibility = View.INVISIBLE
+        binding.tvErrorMessage.visibility = View.VISIBLE
+        binding.tvErrorMessage.text = getString(errorRes)
     }
 
     private fun updateSearchUsers(items: List<UserResponse>) {
         if (items.isNotEmpty()) {
             usersSearchAdapter.updateUsersList(items)
-        } else {
-            Log.d("SearchLog", "updateReposList -> showEmptyReposTitle()")
         }
     }
 
+    companion object {
+        fun newInstance(): UsersSearchFragment = UsersSearchFragment()
+    }
 }

@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container_repos_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:padding="@dimen/repos_item_holder_padding">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_repos_name"
-        android:textColor="@color/black"
-        android:layout_gravity="start"
-        android:gravity="start"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:gravity="start"
         android:maxLines="1"
-        tools:text="Test repos name"/>
+        android:textColor="@color/black"
+        tools:text="Test repos name" />
 
 </LinearLayout>

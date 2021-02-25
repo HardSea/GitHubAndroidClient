@@ -25,4 +25,15 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="btnSearch">search</string>
     <string name="search_button_text">Search</string>
+    <string name="unknown_error_string">Unknown error</string>
+    <string name="resource_not_found_text">Resource not found</string>
+    <string name="api_rate_limit_exceed_text">Api rate limit exceed</string>
+    <string name="user_unauthorize_text">User unathorized</string>
+    <string name="no_network_connection_text">No network connection</string>
+    <string name="unknown_error_text">Unknown error</string>
+    <string name="search_users_hint_text">Search users</string>
+    <string name="login_into_github_text">Login into GitHub</string>
+    <string name="issue_comments_are_empty_text">Issue comments are empty</string>
+    <string name="list_repositories_text">List repositories:</string>
+    <string name="open_comments_text">Open comments</string>
 </resources>

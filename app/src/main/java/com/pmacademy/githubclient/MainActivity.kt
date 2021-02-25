@@ -1,7 +1,6 @@
 package com.pmacademy.githubclient
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.data.pref.SharedPref
@@ -25,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.d("TAGtoken", "onCreate: token - ${sharedPreferences.token}")
         if (sharedPreferences.token == "") {
             fragmentNavigator.showLoginFragment()
         } else {

@@ -9,10 +9,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 class GetRepoInfoModelUseCase {
 
     suspend fun invoke(
-        userName: String,
-        repoName: String,
-        authToken: String,
-        githubUtils: GithubUtils
+        userName: String, repoName: String, authToken: String, githubUtils: GithubUtils
     ): Result<RepoInfoModel, GithubError> {
         val contributorsList = githubUtils.getReposContributors(
             owner = userName,
