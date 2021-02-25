@@ -50,8 +50,8 @@
         android:id="@+id/tv_list_repositories_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="List repositories:"
+        android:layout_margin="@dimen/tv_repositories_text_margin"
+        android:text="@string/list_repositories_text"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/rv_list_repositories"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -76,10 +76,10 @@
         android:id="@+id/tv_empty_repos_list_caption"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
-        android:textColor="@color/black"
         android:gravity="center"
         android:text="@string/the_list_of_repositories_is_empty"
+        android:textColor="@color/black"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -101,11 +101,11 @@
         android:id="@+id/btn_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/btn_search_margin"
         android:text="@string/search_button_text"
-        android:layout_margin="8dp"
         android:visibility="invisible"
-        tools:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,6 @@
 package com.pmacademy.githubclient.data.api
 
 import android.net.Uri
-import android.util.Log
 import com.google.gson.JsonParser
 import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.githubclient.tools.GithubError
@@ -145,7 +144,6 @@ class GithubUtils {
                 )
             )
         } catch (e: Exception) {
-            Log.d("tagsss", "getReposContributors: $e")
             githubInterceptor.getError(e)
         }
     }
@@ -176,23 +174,12 @@ class GithubUtils {
         clickType: ReactionType
     ): Result<Boolean, GithubError> {
         return try {
-            val reactionString = when (clickType) {
-                ReactionType.LIKE -> "+1"
-                ReactionType.DISLIKE -> "-1"
-                ReactionType.LAUGH -> "laugh"
-                ReactionType.CONFUSED -> "confused"
-                ReactionType.HEART -> "heart"
-                ReactionType.HOORAY -> "hooray"
-                ReactionType.ROCKET -> "rocket"
-                ReactionType.EYES -> "eyes"
-            }
-
             apiGithubService.createReactionForIssueComment(
                 owner = owner,
                 repo = repo,
                 auth = authToken,
                 commentId = commentId,
-                reaction = JsonParser().parse("{\"content\": \"$reactionString\"}").asJsonObject
+                reaction = JsonParser().parse("{\"content\": \"${clickType.stringReaction}\"}").asJsonObject
             )
             Result.success(true)
         } catch (e: Exception) {
@@ -205,11 +192,14 @@ class GithubUtils {
         authToken: String
     ): Result<List<UserResponse>, GithubError> {
         return try {
-            Result.success(apiGithubService.getUsersSearch(q = userName, auth = authToken).usersList)
+            Result.success(
+                apiGithubService.getUsersSearch(
+                    q = userName,
+                    auth = authToken
+                ).usersList
+            )
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
     }
-
-
 }

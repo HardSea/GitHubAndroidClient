@@ -1,6 +1,5 @@
 package com.pmacademy.githubclient.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +45,7 @@ class UsersSearchAdapter(private val searchClickListener: (UserResponse) -> Unit
     class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private var tvUserLoginSearch: TextView? = null
         private var ivAvatar: ImageView? = null
+
         init {
             tvUserLoginSearch = view.findViewById(R.id.tv_user_login_search)
             ivAvatar = view.findViewById(R.id.iv_user_avatar)

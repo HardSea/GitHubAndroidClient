@@ -2,12 +2,14 @@ package com.pmacademy.githubclient.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.api.GithubUtils
 import com.pmacademy.githubclient.data.model.UserResponse
+import com.pmacademy.githubclient.databinding.LoginFragmentBinding
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,9 +19,19 @@ import kotlinx.serialization.ExperimentalSerializationApi
 class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
     private lateinit var user: UserResponse
+    private lateinit var binding: LoginFragmentBinding
 
     private val githubUtils: GithubUtils by lazy {
         GithubUtils()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = LoginFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,7 +50,6 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
         GlobalScope.launch {
             val response = githubUtils.getAccessToken(code)
             val token = "${response.tokenType} ${response.accessToken}"
-            Log.d(TAG, "saveUserToken: $token")
             sharedPreferences.token = token
             user = githubUtils.getUser(token).successResult
             saveUserToSharedPreference()
@@ -59,8 +70,14 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
         saveUserToken(code)
     }
 
+    override fun showErrorMessage(errorRes: Int) {
+        binding.btnLogin.visibility = View.GONE
+        binding.tvErrorMessage.visibility = View.VISIBLE
+        binding.tvErrorMessage.text = getString(errorRes)
+    }
+
+
     companion object {
-        private val TAG = LoginFragment::class.java.simpleName
         fun newInstance(): LoginFragment = LoginFragment()
     }
 }

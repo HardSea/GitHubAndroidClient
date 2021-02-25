@@ -10,4 +10,17 @@
     <dimen name="ivLogo_height">40dp</dimen>
     <dimen name="small_layout_margin">5dp</dimen>
     <dimen name="layout_marginStart">20dp</dimen>
+    <dimen name="error_message_text_size">18sp</dimen>
+    <dimen name="issue_body_height">150dp</dimen>
+    <dimen name="issue_author_margin">16dp</dimen>
+    <dimen name="repos_name_padding">8dp</dimen>
+    <dimen name="tv_readme_margin">8dp</dimen>
+    <dimen name="tv_repositories_text_margin">8dp</dimen>
+    <dimen name="btn_search_margin">8dp</dimen>
+    <dimen name="contributor_item_padding">18dp</dimen>
+    <dimen name="tv_issue_comment_body_padding">8dp</dimen>
+    <dimen name="tv_reaction_text_size">22sp</dimen>
+    <dimen name="issues_holder_item_padding">24dp</dimen>
+    <dimen name="repos_item_holder_padding">16dp</dimen>
+    <dimen name="user_search_holder_padding">15dp</dimen>
 </resources>

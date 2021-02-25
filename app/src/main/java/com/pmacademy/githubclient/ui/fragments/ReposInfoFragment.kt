@@ -81,21 +81,7 @@ class ReposInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
         })
     }
 
-    private fun handleError(errorResult: GithubError) {
-        when (errorResult) {
-            GithubError.UNAUTHORIZED -> {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.need_authorization_text),
-                    Toast.LENGTH_SHORT
-                ).show()
-                navigator.showLoginFragment()
-            }
-            else -> showEmptyRepoTitle()
-        }
-    }
-
-    private fun showEmptyRepoTitle() {
+    override fun showErrorMessage(errorRes: Int) {
         binding.progressBarLoading.visibility = View.GONE
         binding.tvEmptyRepoCaption.visibility = View.VISIBLE
     }
