@@ -51,11 +51,11 @@ class FragmentNavigator(
         transaction.commit()
     }
 
-    fun showUsersSearchFragment(/*user: UsersSearchResponce,*/ /*addToBackStack: Boolean = true*/) {
-        val transaction = fragmentManager.beginTransaction()
-            .replace(container, UsersSearchFragment.newInstance(/*user*/))
-             transaction.addToBackStack(null)
-             transaction.commit()
+    fun showUsersSearchFragment() {
+        fragmentManager.beginTransaction()
+            .replace(container, UsersSearchFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
     }
 
 }

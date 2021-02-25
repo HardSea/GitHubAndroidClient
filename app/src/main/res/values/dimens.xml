@@ -4,8 +4,8 @@
     <dimen name="user_avatar_image_size">100dp</dimen>
     <dimen name="readme_height_size">150dp</dimen>
     <dimen name="repo_name_size_text">18sp</dimen>
-    <dimen name="layout_margin">25dp</dimen>
-    <dimen name="recycler_view_leyout_height">0dp</dimen>
+    <dimen name="edit_text_layout_margin">12dp</dimen>
+    <dimen name="recycler_view_layout_height">0dp</dimen>
     <dimen name="ivLogo_width">40dp</dimen>
     <dimen name="ivLogo_height">40dp</dimen>
     <dimen name="small_layout_margin">5dp</dimen>

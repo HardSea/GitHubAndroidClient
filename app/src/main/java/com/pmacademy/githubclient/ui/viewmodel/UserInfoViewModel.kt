@@ -26,7 +26,7 @@ class UserInfoViewModel : ViewModel() {
 
     fun getUserReposList(user: UserResponse, authToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val repos = githubUtils.getUserRepoList(user.login, authToken)
+            val repos = githubUtils.getUserReposList(user.login, authToken)
             withContext(Dispatchers.Main) {
                 _reposLiveData.value = repos
             }

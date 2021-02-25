@@ -43,7 +43,7 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         initRecyclerView()
         binding.tvUserName.text = user.login
         viewModel.getUserReposList(user = user, authToken = sharedPreferences.token)
-        goToUserSearchPage()
+        initListeners()
     }
 
     private fun loadAvatar(imageUrl: String) {
@@ -107,8 +107,15 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         binding.tvListRepositoriesText.visibility = View.VISIBLE
         binding.rvListRepositories.visibility = View.VISIBLE
         binding.ivUserAvatar.visibility = View.VISIBLE
+        binding.btnSearch.visibility = View.VISIBLE
 
         binding.progressBarLoading.visibility = View.GONE
+    }
+
+    private fun initListeners(){
+        binding.btnSearch.setOnClickListener {
+            navigator.showUsersSearchFragment()
+        }
     }
 
     companion object {
@@ -121,9 +128,5 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         }
     }
 
-    private fun goToUserSearchPage(){
-        binding.btnSerach.setOnClickListener {
-            navigator.showUsersSearchFragment()
-        }
-    }
+
 }
