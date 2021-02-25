@@ -7,7 +7,6 @@ import retrofit2.http.*
 
 interface GitHubServiceApi {
 
-
     @Headers("Accept: application/vnd.github.v3+json")
     @POST("/login/oauth/access_token")
     @FormUrlEncoded
@@ -37,6 +36,7 @@ interface GitHubServiceApi {
         @Path("issue_number") issueNumber: Int
     ): List<IssueCommentResponse>
 
+    @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}/contents/README.md")
     suspend fun getRepoReadme(
         @Header("Authorization") auth: String,
@@ -46,7 +46,7 @@ interface GitHubServiceApi {
 
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}/issues")
-    suspend fun getReposIssues(
+    suspend fun getRepoIssues(
         @Header("Authorization") auth: String,
         @Path("owner") owner: String,
         @Path("repo") repo: String
@@ -54,7 +54,7 @@ interface GitHubServiceApi {
 
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/repos/{owner}/{repo}/contributors")
-    suspend fun getReposContributors(
+    suspend fun getRepoContributors(
         @Header("Authorization") auth: String,
         @Path("owner") owner: String,
         @Path("repo") repo: String

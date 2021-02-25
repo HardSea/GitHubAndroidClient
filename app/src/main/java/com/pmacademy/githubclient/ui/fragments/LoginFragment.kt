@@ -30,7 +30,7 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
     }
 
     private fun startGitHubLogin() {
-        val authIntent = Intent(Intent.ACTION_VIEW, githubUtils.buildAuthGitHubUrl())
+        val authIntent = Intent(Intent.ACTION_VIEW, githubUtils.buildAuthGithubUrl())
         startActivity(authIntent)
     }
 
