@@ -15,18 +15,21 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
+private typealias ResultListComments = Result<List<IssueCommentResponse>, GithubError>
+private typealias ResultCreateResponse = Result<Boolean, GithubError>
+
 @ExperimentalSerializationApi
 class IssueCommentsViewModel @Inject constructor(private val githubUtils: GithubUtils) :
     ViewModel() {
 
     private val _issueCommentsLiveData =
-        MutableLiveData<Result<List<IssueCommentResponse>, GithubError>>()
-    val issueCommentsLiveData: LiveData<Result<List<IssueCommentResponse>, GithubError>> =
+        MutableLiveData<ResultListComments>()
+    val issueCommentsLiveData: LiveData<ResultListComments> =
         _issueCommentsLiveData
 
     private val _createReactionResultLiveData =
-        MutableLiveData<Result<Boolean, GithubError>>()
-    val createReactionResultLiveData: LiveData<Result<Boolean, GithubError>> =
+        MutableLiveData<ResultCreateResponse>()
+    val createReactionResultLiveData: LiveData<ResultCreateResponse> =
         _createReactionResultLiveData
 
     fun getIssueComments(userName: String, repoName: String, issueNumber: Int) {

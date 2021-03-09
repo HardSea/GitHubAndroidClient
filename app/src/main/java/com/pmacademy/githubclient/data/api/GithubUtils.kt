@@ -44,12 +44,12 @@ class GithubUtils @Inject constructor(private val sharedPrefs: SharedPref) {
             .build()
     }
 
-    private val loginGithubService: GitHubServiceApi =
-        createRetrofit(loginHost).create(GitHubServiceApi::class.java)
+    private val loginGithubService: GitHubLoginService =
+        createRetrofit(loginHost).create(GitHubLoginService::class.java)
 
 
-    private val apiGithubService: GitHubServiceApi =
-        createRetrofit(apiHost).create(GitHubServiceApi::class.java)
+    private val apiGithubService: GitHubApiService =
+        createRetrofit(apiHost).create(GitHubApiService::class.java)
 
 
     fun buildAuthGitHubUrl(): Uri {

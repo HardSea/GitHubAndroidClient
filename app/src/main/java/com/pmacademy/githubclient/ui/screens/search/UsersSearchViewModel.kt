@@ -14,11 +14,13 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
+private typealias ResultList = Result<List<UserResponse>, GithubError>
+
 @ExperimentalSerializationApi
 class UsersSearchViewModel @Inject constructor(private val githubUtils: GithubUtils) : ViewModel() {
 
-    private val _userSearchLiveData = MutableLiveData<Result<List<UserResponse>, GithubError>>()
-    val userSearchLiveData: LiveData<Result<List<UserResponse>, GithubError>> = _userSearchLiveData
+    private val _userSearchLiveData = MutableLiveData<ResultList>()
+    val userSearchLiveData: LiveData<ResultList> = _userSearchLiveData
 
     fun getUsersSearch(username: String) {
         viewModelScope.launch(Dispatchers.IO) {

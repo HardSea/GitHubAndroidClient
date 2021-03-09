@@ -4,16 +4,7 @@ import com.pmacademy.githubclient.data.model.*
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 import retrofit2.http.*
 
-interface GitHubServiceApi {
-
-    @Headers("Accept: application/vnd.github.v3+json")
-    @POST("/login/oauth/access_token")
-    @FormUrlEncoded
-    suspend fun getAccessToken(
-        @Field("client_id") clientId: String,
-        @Field("client_secret") clientSecret: String,
-        @Field("code") code: String,
-    ): AccessTokenResponse
+interface GitHubApiService {
 
     @GET("/user")
     suspend fun getUser(): UserResponse
