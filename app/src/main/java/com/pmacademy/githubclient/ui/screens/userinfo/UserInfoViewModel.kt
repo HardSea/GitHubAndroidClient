@@ -13,20 +13,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
-class UserInfoViewModel : ViewModel() {
+class UserInfoViewModel @Inject constructor(private val githubUtils: GithubUtils) : ViewModel() {
 
     private val _reposLiveData = MutableLiveData<Result<List<ReposResponse>, GithubError>>()
     val reposLiveData: LiveData<Result<List<ReposResponse>, GithubError>> = _reposLiveData
 
-    private val githubUtils: GithubUtils by lazy {
-        GithubUtils()
-    }
-
-    fun getUserReposList(user: UserResponse, authToken: String) {
+    fun getUserReposList(user: UserResponse) {
         viewModelScope.launch(Dispatchers.IO) {
-            val repos = githubUtils.getUserReposList(user.login, authToken)
+            val repos = githubUtils.getUserReposList(user.login)
             withContext(Dispatchers.Main) {
                 _reposLiveData.value = repos
             }

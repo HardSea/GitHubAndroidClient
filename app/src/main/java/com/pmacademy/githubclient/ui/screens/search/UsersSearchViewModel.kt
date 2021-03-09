@@ -12,20 +12,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
-class UsersSearchViewModel : ViewModel() {
+class UsersSearchViewModel @Inject constructor(private val githubUtils: GithubUtils) : ViewModel() {
 
     private val _userSearchLiveData = MutableLiveData<Result<List<UserResponse>, GithubError>>()
     val userSearchLiveData: LiveData<Result<List<UserResponse>, GithubError>> = _userSearchLiveData
 
-    private val githubUtils: GithubUtils by lazy {
-        GithubUtils()
-    }
-
-    fun getUsersSearch(username: String, authToken: String) {
+    fun getUsersSearch(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = githubUtils.getUsersSearch(username, authToken)
+            val result = githubUtils.getUsersSearch(username)
             withContext(Dispatchers.Main) {
                 _userSearchLiveData.value = result
             }

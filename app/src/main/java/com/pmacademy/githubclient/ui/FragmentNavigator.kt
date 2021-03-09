@@ -11,24 +11,22 @@ import com.pmacademy.githubclient.ui.screens.search.UsersSearchFragment
 import com.pmacademy.githubclient.ui.screens.userinfo.UserInfoFragment
 import kotlinx.serialization.ExperimentalSerializationApi
 
+data class IssueInfo(val issue: IssueResponse, val userName: String, val repoName: String)
+
 @ExperimentalSerializationApi
 class FragmentNavigator(
     private val fragmentManager: FragmentManager,
     @IdRes private val container: Int,
 ) {
 
-    fun showIssueInfoFragment(
-        issue: IssueResponse,
-        userName: String,
-        repoName: String
-    ) {
+    fun showIssueInfoFragment(issueInfo: IssueInfo) {
         fragmentManager.beginTransaction()
             .replace(
                 container,
                 IssueInfoFragment.newInstance(
-                    issue = issue,
-                    userName = userName,
-                    repoName = repoName
+                    issue = issueInfo.issue,
+                    userName = issueInfo.userName,
+                    repoName = issueInfo.repoName
                 )
             )
             .addToBackStack(null)

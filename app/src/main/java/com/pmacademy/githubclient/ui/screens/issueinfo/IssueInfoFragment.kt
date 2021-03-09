@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getDrawable
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.pmacademy.githubclient.Application
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.IssueCommentResponse
 import com.pmacademy.githubclient.data.model.IssueResponse
@@ -17,12 +17,15 @@ import com.pmacademy.githubclient.databinding.IssueInfoFragmentBinding
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import com.pmacademy.githubclient.ui.screens.issueinfo.adapter.IssueCommentsAdapter
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
 class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
 
     private lateinit var binding: IssueInfoFragmentBinding
-    private val viewModel: IssueCommentsViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModel: IssueCommentsViewModel
     private lateinit var issue: IssueResponse
     private lateinit var userName: String
     private lateinit var repoName: String
@@ -31,7 +34,6 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
             userName = userName,
             repoName = repoName,
             commentResponse = commentResponse,
-            authToken = sharedPreferences.token,
             clickType = clickType
         )
     }
@@ -55,8 +57,7 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
         viewModel.getIssueComments(
             userName = userName,
             repoName = repoName,
-            issueNumber = issue.number,
-            authToken = sharedPreferences.token
+            issueNumber = issue.number
         )
         setupView()
     }
@@ -150,5 +151,10 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
                 bundle.putString(KEY_REPO_NAME, repoName)
                 this.arguments = bundle
             }
+    }
+
+    override fun setupDi() {
+        val app = requireActivity().application as Application
+        app.getComponent().inject(this)
     }
 }

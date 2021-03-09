@@ -6,16 +6,18 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.pmacademy.githubclient.Application
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.IssueResponse
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.RepositoryInfoFragmentBinding
-import com.pmacademy.githubclient.ui.screens.issueinfo.adapter.IssueAdapter
+import com.pmacademy.githubclient.ui.IssueInfo
 import com.pmacademy.githubclient.ui.base.BaseFragment
+import com.pmacademy.githubclient.ui.screens.issueinfo.adapter.IssueAdapter
 import com.pmacademy.githubclient.ui.screens.repoinfo.adapter.ContributorsAdapter
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
 class RepoInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
@@ -23,15 +25,19 @@ class RepoInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
     private lateinit var repoName: String
     private lateinit var userName: String
     private lateinit var binding: RepositoryInfoFragmentBinding
-    private val viewModel: ReposInfoViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModel: ReposInfoViewModel
     private val contributorsAdapter = ContributorsAdapter { user ->
         navigator.showUserInfoFragment(user)
     }
     private val issuesAdapter = IssueAdapter { issue ->
         navigator.showIssueInfoFragment(
-            issue = issue,
-            userName = userName,
-            repoName = repoName
+            IssueInfo(
+                issue = issue,
+                userName = userName,
+                repoName = repoName
+            )
         )
     }
 
@@ -51,9 +57,11 @@ class RepoInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
         observeLiveData()
         binding.tvReposName.text = repoName
         viewModel.getRepoInfo(
-            repoName = repoName,
-            userName = userName,
-            authToken = sharedPreferences.token
+            RepoInfo(
+                repoName = repoName,
+                userName = userName,
+                authToken = sharedPreferences.token
+            )
         )
         initRecyclerViews()
     }
@@ -131,5 +139,10 @@ class RepoInfoFragment : BaseFragment(R.layout.repository_info_fragment) {
                 bundle.putString(KEY_USER_NAME, userName)
                 this.arguments = bundle
             }
+    }
+
+    override fun setupDi() {
+        val app = requireActivity().application as Application
+        app.getComponent().inject(this)
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import com.pmacademy.githubclient.Application
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.api.GithubUtils
 import com.pmacademy.githubclient.data.model.UserResponse
@@ -14,6 +15,7 @@ import com.pmacademy.githubclient.ui.base.BaseFragment
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
 class LoginFragment : BaseFragment(R.layout.login_fragment) {
@@ -21,9 +23,8 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
     private lateinit var user: UserResponse
     private lateinit var binding: LoginFragmentBinding
 
-    private val githubUtils: GithubUtils by lazy {
-        GithubUtils()
-    }
+    @Inject
+    lateinit var githubUtils: GithubUtils
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +52,7 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
             val response = githubUtils.getAccessToken(code)
             val token = "${response.tokenType} ${response.accessToken}"
             sharedPreferences.token = token
-            user = githubUtils.getUser(token).successResult
+            user = githubUtils.getUser().successResult
             saveUserToSharedPreference()
             navigator.showUserInfoFragment(user, addToBackStack = false)
             requireActivity().intent.data = null
@@ -76,6 +77,10 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
         binding.tvErrorMessage.text = getString(errorRes)
     }
 
+    override fun setupDi() {
+        val app = requireActivity().application as Application
+        app.getComponent().inject(this)
+    }
 
     companion object {
         fun newInstance(): LoginFragment = LoginFragment()

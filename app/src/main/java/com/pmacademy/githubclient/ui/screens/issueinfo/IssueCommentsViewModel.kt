@@ -13,9 +13,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
-class IssueCommentsViewModel : ViewModel() {
+class IssueCommentsViewModel @Inject constructor(private val githubUtils: GithubUtils) :
+    ViewModel() {
 
     private val _issueCommentsLiveData =
         MutableLiveData<Result<List<IssueCommentResponse>, GithubError>>()
@@ -27,17 +29,12 @@ class IssueCommentsViewModel : ViewModel() {
     val createReactionResultLiveData: LiveData<Result<Boolean, GithubError>> =
         _createReactionResultLiveData
 
-    private val githubUtils: GithubUtils by lazy {
-        GithubUtils()
-    }
-
-    fun getIssueComments(userName: String, repoName: String, issueNumber: Int, authToken: String) {
+    fun getIssueComments(userName: String, repoName: String, issueNumber: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val repos = githubUtils.getIssueCommentsList(
                 owner = userName,
                 repo = repoName,
-                issueNumber = issueNumber,
-                authToken = authToken
+                issueNumber = issueNumber
             )
             withContext(Dispatchers.Main) {
                 _issueCommentsLiveData.value = repos
@@ -48,7 +45,6 @@ class IssueCommentsViewModel : ViewModel() {
     fun createCommentReaction(
         userName: String,
         repoName: String,
-        authToken: String,
         commentResponse: IssueCommentResponse,
         clickType: ReactionType
     ) {
@@ -56,7 +52,6 @@ class IssueCommentsViewModel : ViewModel() {
             val result = githubUtils.createReactionForIssueComment(
                 owner = userName,
                 repo = repoName,
-                authToken = authToken,
                 commentId = commentResponse.id,
                 clickType = clickType
             )

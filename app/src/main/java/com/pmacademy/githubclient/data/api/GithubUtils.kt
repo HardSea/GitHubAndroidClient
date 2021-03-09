@@ -1,8 +1,8 @@
 package com.pmacademy.githubclient.data.api
 
 import android.net.Uri
-import com.google.gson.JsonParser
 import com.pmacademy.githubclient.data.model.*
+import com.pmacademy.githubclient.data.pref.SharedPref
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
 import com.pmacademy.githubclient.tools.StringDecoder
@@ -13,10 +13,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 
 @ExperimentalSerializationApi
-class GithubUtils {
+class GithubUtils @Inject constructor(private val sharedPrefs: SharedPref) {
 
     private companion object {
         const val clientId = "4c730b7299ec5bf137ae"
@@ -34,6 +35,7 @@ class GithubUtils {
         return Retrofit.Builder()
             .client(
                 OkHttpClient().newBuilder()
+                    .addInterceptor(GitHubHeaderInterceptor(sharedPrefs.token))
                     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build()
             )
@@ -42,13 +44,13 @@ class GithubUtils {
             .build()
     }
 
-    private val loginGithubService: GitHubServiceApi by lazy {
+    private val loginGithubService: GitHubServiceApi =
         createRetrofit(loginHost).create(GitHubServiceApi::class.java)
-    }
 
-    private val apiGithubService: GitHubServiceApi by lazy {
+
+    private val apiGithubService: GitHubServiceApi =
         createRetrofit(apiHost).create(GitHubServiceApi::class.java)
-    }
+
 
     fun buildAuthGitHubUrl(): Uri {
         return Uri.Builder()
@@ -73,20 +75,19 @@ class GithubUtils {
         return loginGithubService.getAccessToken(clientId, clientSecret, code)
     }
 
-    suspend fun getUser(token: String): Result<UserResponse, GithubError> {
+    suspend fun getUser(): Result<UserResponse, GithubError> {
         return try {
-            Result.success(apiGithubService.getUser(token))
+            Result.success(apiGithubService.getUser())
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
     }
 
     suspend fun getUserReposList(
-        username: String,
-        authToken: String
+        username: String
     ): Result<List<ReposResponse>, GithubError> {
         return try {
-            Result.success(apiGithubService.getListUserRepos(username = username, auth = authToken))
+            Result.success(apiGithubService.getListUserRepos(username = username))
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
@@ -95,16 +96,14 @@ class GithubUtils {
     suspend fun getIssueCommentsList(
         issueNumber: Int,
         owner: String,
-        repo: String,
-        authToken: String
+        repo: String
     ): Result<List<IssueCommentResponse>, GithubError> {
         return try {
             Result.success(
                 apiGithubService.getIssueCommentsList(
                     issueNumber = issueNumber,
                     owner = owner,
-                    repo = repo,
-                    auth = authToken
+                    repo = repo
                 )
             )
         } catch (e: Exception) {
@@ -114,14 +113,12 @@ class GithubUtils {
 
     suspend fun getRepoReadme(
         owner: String,
-        repo: String,
-        authToken: String
+        repo: String
     ): Result<String, GithubError> {
         return try {
             val readme = apiGithubService.getRepoReadme(
                 owner = owner,
-                repo = repo,
-                auth = authToken
+                repo = repo
             )
             val encodeReadme = StringDecoder().decodeText(readme.content, readme.encoding)
             return Result.success(encodeReadme)
@@ -132,15 +129,13 @@ class GithubUtils {
 
     suspend fun getReposContributors(
         owner: String,
-        repo: String,
-        authToken: String
+        repo: String
     ): Result<List<UserResponse>, GithubError> {
         return try {
             Result.success(
                 apiGithubService.getRepoContributors(
                     owner = owner,
-                    repo = repo,
-                    auth = authToken
+                    repo = repo
                 )
             )
         } catch (e: Exception) {
@@ -150,15 +145,13 @@ class GithubUtils {
 
     suspend fun getReposIssues(
         owner: String,
-        repo: String,
-        authToken: String
+        repo: String
     ): Result<List<IssueResponse>, GithubError> {
         return try {
             Result.success(
                 apiGithubService.getRepoIssues(
                     owner = owner,
-                    repo = repo,
-                    auth = authToken
+                    repo = repo
                 )
             )
         } catch (e: Exception) {
@@ -169,7 +162,6 @@ class GithubUtils {
     suspend fun createReactionForIssueComment(
         owner: String,
         repo: String,
-        authToken: String,
         commentId: Int,
         clickType: ReactionType
     ): Result<Boolean, GithubError> {
@@ -177,9 +169,8 @@ class GithubUtils {
             apiGithubService.createReactionForIssueComment(
                 owner = owner,
                 repo = repo,
-                auth = authToken,
                 commentId = commentId,
-                reaction = JsonParser().parse("{\"content\": \"${clickType.stringReaction}\"}").asJsonObject
+                reaction = Reaction(clickType.stringReaction)
             )
             Result.success(true)
         } catch (e: Exception) {
@@ -188,14 +179,12 @@ class GithubUtils {
     }
 
     suspend fun getUsersSearch(
-        userName: String,
-        authToken: String
+        userName: String
     ): Result<List<UserResponse>, GithubError> {
         return try {
             Result.success(
                 apiGithubService.getUsersSearch(
-                    q = userName,
-                    auth = authToken
+                    q = userName
                 ).usersList
             )
         } catch (e: Exception) {

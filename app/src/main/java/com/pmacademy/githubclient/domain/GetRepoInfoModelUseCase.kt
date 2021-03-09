@@ -9,18 +9,17 @@ import kotlinx.serialization.ExperimentalSerializationApi
 class GetRepoInfoModelUseCase {
 
     suspend fun invoke(
-        userName: String, repoName: String, authToken: String, githubUtils: GithubUtils
+        userName: String, repoName: String, githubUtils: GithubUtils
     ): Result<RepoInfoModel, GithubError> {
         val contributorsList = githubUtils.getReposContributors(
             owner = userName,
-            repo = repoName,
-            authToken = authToken
+            repo = repoName
         )
         val issueList =
-            githubUtils.getReposIssues(owner = userName, repo = repoName, authToken = authToken)
+            githubUtils.getReposIssues(owner = userName, repo = repoName)
 
         val readmeText =
-            githubUtils.getRepoReadme(owner = userName, repo = repoName, authToken = authToken)
+            githubUtils.getRepoReadme(owner = userName, repo = repoName)
 
         val readmeTextReturn = if (readmeText.isError) "" else readmeText.successResult
 

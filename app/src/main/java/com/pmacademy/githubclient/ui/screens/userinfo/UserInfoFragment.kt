@@ -5,16 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.pmacademy.githubclient.Application
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.UserInfoFragmentBinding
-import com.pmacademy.githubclient.ui.screens.userinfo.adapter.ReposListAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
+import com.pmacademy.githubclient.ui.screens.userinfo.adapter.ReposListAdapter
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
 class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
@@ -22,7 +23,9 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
     private val rvPostsAdapter =
         ReposListAdapter { reposName -> navigator.showProjectInfoFragment(reposName, user.login) }
     private lateinit var binding: UserInfoFragmentBinding
-    private val viewModel: UserInfoViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModel: UserInfoViewModel
     private lateinit var user: UserResponse
 
     override fun onCreateView(
@@ -40,7 +43,7 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
         observeReposLiveData()
         initRecyclerView()
         binding.tvUserName.text = user.login
-        viewModel.getUserReposList(user = user, authToken = sharedPreferences.token)
+        viewModel.getUserReposList(user = user)
         initListeners()
     }
 
@@ -111,5 +114,10 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
             bundle.putSerializable(KEY_USER, user)
             this.arguments = bundle
         }
+    }
+
+    override fun setupDi() {
+        val app = requireActivity().application as Application
+        app.getComponent().inject(this)
     }
 }

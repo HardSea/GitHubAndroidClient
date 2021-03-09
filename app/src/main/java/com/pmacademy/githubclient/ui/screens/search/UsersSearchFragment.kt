@@ -4,21 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.pmacademy.githubclient.Application
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.FragmentUsersSearchBinding
 import com.pmacademy.githubclient.ui.base.BaseFragment
 import com.pmacademy.githubclient.ui.screens.search.adapter.UsersSearchAdapter
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 
 @ExperimentalSerializationApi
 class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
 
     private lateinit var binding: FragmentUsersSearchBinding
-    private val viewModel: UsersSearchViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModel: UsersSearchViewModel
     private var usersSearchAdapter: UsersSearchAdapter = UsersSearchAdapter { user ->
         navigator.showUserInfoFragment(user)
     }
@@ -49,7 +52,7 @@ class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
     }
 
     private fun getUsersSearch() {
-        viewModel.getUsersSearch(binding.etSearchInput.text.toString(), sharedPreferences.token)
+        viewModel.getUsersSearch(binding.etSearchInput.text.toString())
     }
 
     private fun initRecyclerViews() {
@@ -81,5 +84,10 @@ class UsersSearchFragment : BaseFragment(R.layout.fragment_users_search) {
 
     companion object {
         fun newInstance(): UsersSearchFragment = UsersSearchFragment()
+    }
+
+    override fun setupDi() {
+        val app = requireActivity().application as Application
+        app.getComponent().inject(this)
     }
 }
