@@ -12,11 +12,11 @@ import com.pmacademy.myapplicationtemp.data.ReposResponse
 
 private class RepoItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
     override fun areItemsTheSame(oldItem: ReposResponse, newItem: ReposResponse): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: ReposResponse, newItem: ReposResponse): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem == newItem
     }
 }
 
