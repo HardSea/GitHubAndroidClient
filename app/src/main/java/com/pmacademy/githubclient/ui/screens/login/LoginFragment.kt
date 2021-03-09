@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.fragments
+package com.pmacademy.githubclient.ui.screens.login
 
 import android.content.Intent
 import android.os.Bundle

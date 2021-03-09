@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.viewmodel
+package com.pmacademy.githubclient.ui.screens.userinfo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

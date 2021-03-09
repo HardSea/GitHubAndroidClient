@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.fragments
+package com.pmacademy.githubclient.ui.screens.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.FragmentUsersSearchBinding
-import com.pmacademy.githubclient.ui.adapter.UsersSearchAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
-import com.pmacademy.githubclient.ui.viewmodel.UsersSearchViewModel
+import com.pmacademy.githubclient.ui.screens.search.adapter.UsersSearchAdapter
 import kotlinx.serialization.ExperimentalSerializationApi
 
 

@@ -4,7 +4,11 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
 import com.pmacademy.githubclient.data.model.IssueResponse
 import com.pmacademy.githubclient.data.model.UserResponse
-import com.pmacademy.githubclient.ui.fragments.*
+import com.pmacademy.githubclient.ui.screens.issueinfo.IssueInfoFragment
+import com.pmacademy.githubclient.ui.screens.login.LoginFragment
+import com.pmacademy.githubclient.ui.screens.repoinfo.RepoInfoFragment
+import com.pmacademy.githubclient.ui.screens.search.UsersSearchFragment
+import com.pmacademy.githubclient.ui.screens.userinfo.UserInfoFragment
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalSerializationApi
@@ -39,7 +43,7 @@ class FragmentNavigator(
 
     fun showProjectInfoFragment(reposName: String, userName: String) {
         fragmentManager.beginTransaction()
-            .replace(container, ReposInfoFragment.newInstance(reposName, userName))
+            .replace(container, RepoInfoFragment.newInstance(reposName, userName))
             .addToBackStack(null)
             .commit()
     }

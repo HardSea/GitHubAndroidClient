@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.fragments
+package com.pmacademy.githubclient.ui.screens.issueinfo
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -14,9 +14,8 @@ import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.IssueCommentResponse
 import com.pmacademy.githubclient.data.model.IssueResponse
 import com.pmacademy.githubclient.databinding.IssueInfoFragmentBinding
-import com.pmacademy.githubclient.ui.adapter.IssueCommentsAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
-import com.pmacademy.githubclient.ui.viewmodel.IssueCommentsViewModel
+import com.pmacademy.githubclient.ui.screens.issueinfo.adapter.IssueCommentsAdapter
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalSerializationApi

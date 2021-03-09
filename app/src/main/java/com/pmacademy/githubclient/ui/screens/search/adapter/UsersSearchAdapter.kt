@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.adapter
+package com.pmacademy.githubclient.ui.screens.search.adapter
 
 import android.view.LayoutInflater
 import android.view.View

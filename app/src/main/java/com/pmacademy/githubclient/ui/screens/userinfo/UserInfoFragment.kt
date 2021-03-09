@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.fragments
+package com.pmacademy.githubclient.ui.screens.userinfo
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +11,8 @@ import com.bumptech.glide.Glide
 import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.UserInfoFragmentBinding
-import com.pmacademy.githubclient.ui.adapter.ReposListAdapter
+import com.pmacademy.githubclient.ui.screens.userinfo.adapter.ReposListAdapter
 import com.pmacademy.githubclient.ui.base.BaseFragment
-import com.pmacademy.githubclient.ui.viewmodel.UserInfoViewModel
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 
