@@ -10,13 +10,18 @@ import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.ui.FragmentNavigator
 import com.pmacademy.githubclient.ui.MainActivity
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
 abstract class BaseFragment(layoutId: Int) : Fragment(layoutId) {
     protected val navigator: FragmentNavigator by lazy {
         (requireActivity() as MainActivity).fragmentNavigator
     }
-    protected val sharedPreferences by lazy { SharedPref(requireContext()) }
+
+    //protected val sharedPreferences by lazy { SharedPref(requireContext()) }
+
+    @Inject
+    lateinit var sharedPreferences: SharedPref
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

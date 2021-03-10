@@ -1,25 +1,24 @@
 package com.pmacademy.githubclient.data.api
 
-import android.net.Uri
-import com.pmacademy.githubclient.data.model.*
-import com.pmacademy.githubclient.data.pref.SharedPref
+import com.pmacademy.githubclient.data.model.IssueCommentResponse
+import com.pmacademy.githubclient.data.model.IssueResponse
+import com.pmacademy.githubclient.data.model.ReactionType
+import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
 import com.pmacademy.githubclient.tools.StringDecoder
 import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.serialization.ExperimentalSerializationApi
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
 @ExperimentalSerializationApi
-class GithubUtils @Inject constructor(private val sharedPrefs: SharedPref) {
+class GithubUtils @Inject constructor(
+    private val apiGithubService: GitHubApiService,
+    private val githubInterceptor: GitHubInterceptor
+) {
 
-    private companion object {
+    companion object {
         const val clientId = "4c730b7299ec5bf137ae"
         const val clientSecret = "27893f6c73800e60a2b0ad05f388335824f88811"
         const val redirectUrl = "androidgithubclient://callback"
@@ -27,52 +26,6 @@ class GithubUtils @Inject constructor(private val sharedPrefs: SharedPref) {
         const val schema = "https"
         const val loginHost = "github.com"
         const val apiHost = "api.github.com"
-    }
-
-    private val githubInterceptor = GitHubInterceptor()
-
-    private fun createRetrofit(baseHost: String): Retrofit {
-        return Retrofit.Builder()
-            .client(
-                OkHttpClient().newBuilder()
-                    .addInterceptor(GitHubHeaderInterceptor(sharedPrefs.token))
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .build()
-            )
-            .baseUrl(HttpUrl.Builder().scheme(schema).host(baseHost).build())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    private val loginGithubService: GitHubLoginService =
-        createRetrofit(loginHost).create(GitHubLoginService::class.java)
-
-
-    private val apiGithubService: GitHubApiService =
-        createRetrofit(apiHost).create(GitHubApiService::class.java)
-
-
-    fun buildAuthGitHubUrl(): Uri {
-        return Uri.Builder()
-            .scheme(schema)
-            .authority(loginHost)
-            .appendEncodedPath("login/oauth/authorize")
-            .appendQueryParameter("client_id", clientId)
-            .appendQueryParameter("scope", scopes)
-            .appendQueryParameter("redirect_url", redirectUrl)
-            .build()
-    }
-
-    fun getCodeFromUri(uri: Uri?): String? {
-        uri ?: return null
-        if (!uri.toString().startsWith(redirectUrl)) {
-            return null
-        }
-        return uri.getQueryParameter("code")
-    }
-
-    suspend fun getAccessToken(code: String): AccessTokenResponse {
-        return loginGithubService.getAccessToken(clientId, clientSecret, code)
     }
 
     suspend fun getUser(): Result<UserResponse, GithubError> {

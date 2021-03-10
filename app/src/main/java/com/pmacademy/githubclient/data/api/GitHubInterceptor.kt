@@ -2,9 +2,10 @@ package com.pmacademy.githubclient.data.api
 
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
+import javax.inject.Inject
 
 
-class GitHubInterceptor {
+class GitHubInterceptor @Inject constructor() {
     private companion object {
         private const val ERROR_404 = "HTTP 404 "
         private const val ERROR_403 = "HTTP 403 "

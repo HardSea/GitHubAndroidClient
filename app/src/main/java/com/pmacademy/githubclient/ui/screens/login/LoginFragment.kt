@@ -2,12 +2,14 @@ package com.pmacademy.githubclient.ui.screens.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pmacademy.githubclient.Application
 import com.pmacademy.githubclient.R
+import com.pmacademy.githubclient.data.api.GitHubLoginUtils
 import com.pmacademy.githubclient.data.api.GithubUtils
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.LoginFragmentBinding
@@ -25,6 +27,8 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
     @Inject
     lateinit var githubUtils: GithubUtils
+    @Inject
+    lateinit var githubLoginUtils: GitHubLoginUtils
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,15 +47,16 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
     }
 
     private fun startGitHubLogin() {
-        val authIntent = Intent(Intent.ACTION_VIEW, githubUtils.buildAuthGitHubUrl())
+        val authIntent = Intent(Intent.ACTION_VIEW, githubLoginUtils.buildAuthGitHubUrl())
         startActivity(authIntent)
     }
 
     private fun saveUserToken(code: String) {
         GlobalScope.launch {
-            val response = githubUtils.getAccessToken(code)
+            val response = githubLoginUtils.getAccessToken(code)
             val token = "${response.tokenType} ${response.accessToken}"
             sharedPreferences.token = token
+            Log.d("tagss", "saveUserToken: ${sharedPreferences.token}")
             user = githubUtils.getUser().successResult
             saveUserToSharedPreference()
             navigator.showUserInfoFragment(user, addToBackStack = false)
@@ -66,7 +71,7 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
 
     override fun onResume() {
         super.onResume()
-        val code = githubUtils.getCodeFromUri(uri = requireActivity().intent.data)
+        val code = githubLoginUtils.getCodeFromUri(uri = requireActivity().intent.data)
         code ?: return
         saveUserToken(code)
     }
