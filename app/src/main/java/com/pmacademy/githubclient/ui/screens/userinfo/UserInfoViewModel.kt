@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.viewmodel
+package com.pmacademy.githubclient.ui.screens.userinfo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,26 +8,26 @@ import com.pmacademy.githubclient.data.api.GithubUtils
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.tools.GithubError
 import com.pmacademy.githubclient.tools.Result
+import com.pmacademy.myapplicationtemp.data.ReposResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
+
+private typealias ResultList = Result<List<ReposResponse>, GithubError>
 
 @ExperimentalSerializationApi
-class UsersSearchViewModel : ViewModel() {
+class UserInfoViewModel @Inject constructor(private val githubUtils: GithubUtils) : ViewModel() {
 
-    private val _userSearchLiveData = MutableLiveData<Result<List<UserResponse>, GithubError>>()
-    val userSearchLiveData: LiveData<Result<List<UserResponse>, GithubError>> = _userSearchLiveData
+    private val _reposLiveData = MutableLiveData<ResultList>()
+    val reposLiveData: LiveData<ResultList> = _reposLiveData
 
-    private val githubUtils: GithubUtils by lazy {
-        GithubUtils()
-    }
-
-    fun getUsersSearch(username: String, authToken: String) {
+    fun getUserReposList(user: UserResponse) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = githubUtils.getUsersSearch(username, authToken)
+            val repos = user.login?.let { login -> githubUtils.getUserReposList(login) }
             withContext(Dispatchers.Main) {
-                _userSearchLiveData.value = result
+                _reposLiveData.value = repos
             }
         }
     }

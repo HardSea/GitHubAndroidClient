@@ -3,12 +3,12 @@ package com.pmacademy.githubclient.data.pref
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import javax.inject.Inject
 
-class SharedPref(context: Context) {
+class SharedPref @Inject constructor(context: Context) {
 
     private companion object {
         const val KEY_TOKEN = "KEY_TOKEN"
-        const val KEY_LAST = "KEY_LAST"
         const val KEY_LOCAL_USER_NAME = "KEY_LOCAL_USER_NAME"
         const val KEY_LOCAL_USER_AVATAR_URL = "KEY_LOCAL_USER_AVATAR_URL"
     }
@@ -25,8 +25,5 @@ class SharedPref(context: Context) {
         KEY_LOCAL_USER_AVATAR_URL,
         ""
     )
-
-
-    val bool: Boolean by SharedPrefDelegate(sharedPreferences, KEY_LAST, true)
 
 }

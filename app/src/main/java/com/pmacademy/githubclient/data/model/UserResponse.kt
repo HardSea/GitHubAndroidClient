@@ -5,7 +5,7 @@ import java.io.Serializable
 
 data class UserResponse(
     @SerializedName("login")
-    val login: String,
+    val login: String?,
     @SerializedName("avatar_url")
-    val avatarUrl: String
+    val avatarUrl: String?
 ) : Serializable

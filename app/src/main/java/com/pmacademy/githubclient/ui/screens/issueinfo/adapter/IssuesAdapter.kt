@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.adapter
+package com.pmacademy.githubclient.ui.screens.issueinfo.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +12,11 @@ import com.pmacademy.githubclient.data.model.IssueResponse
 
 private class IssueItemDiffCallback : DiffUtil.ItemCallback<IssueResponse>() {
     override fun areItemsTheSame(oldItem: IssueResponse, newItem: IssueResponse): Boolean {
-        return oldItem == newItem
+        return oldItem.number == newItem.number
     }
 
     override fun areContentsTheSame(oldItem: IssueResponse, newItem: IssueResponse): Boolean {
-        return oldItem.number == newItem.number
+        return oldItem == newItem
     }
 }
 

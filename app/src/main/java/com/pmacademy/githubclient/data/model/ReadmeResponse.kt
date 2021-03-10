@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ReadmeResponse(
     @SerializedName("content")
-    val content: String,
+    val content: String?,
     @SerializedName("encoding")
-    val encoding: String
+    val encoding: String?
 )

@@ -1,10 +1,11 @@
-package com.pmacademy.githubclient
+package com.pmacademy.githubclient.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.pmacademy.githubclient.Application
+import com.pmacademy.githubclient.R
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.data.pref.SharedPref
-import com.pmacademy.githubclient.ui.FragmentNavigator
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalSerializationApi

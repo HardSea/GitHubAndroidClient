@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.adapter
+package com.pmacademy.githubclient.ui.screens.search.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +15,11 @@ import com.pmacademy.githubclient.data.model.UserResponse
 
 private class SearchItemDiffCallback : DiffUtil.ItemCallback<UserResponse>() {
     override fun areItemsTheSame(oldItem: UserResponse, newItem: UserResponse): Boolean {
-        return oldItem == newItem
+        return oldItem.login == newItem.login
     }
 
     override fun areContentsTheSame(oldItem: UserResponse, newItem: UserResponse): Boolean {
-        return oldItem.login == newItem.login
+        return oldItem == newItem
     }
 }
 

@@ -1,12 +1,15 @@
-package com.pmacademy.githubclient.ui.fragments
+package com.pmacademy.githubclient.ui.screens.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import com.pmacademy.githubclient.Application
 import com.pmacademy.githubclient.R
+import com.pmacademy.githubclient.data.api.GitHubLoginUtils
 import com.pmacademy.githubclient.data.api.GithubUtils
 import com.pmacademy.githubclient.data.model.UserResponse
 import com.pmacademy.githubclient.databinding.LoginFragmentBinding
@@ -14,6 +17,7 @@ import com.pmacademy.githubclient.ui.base.BaseFragment
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
 @ExperimentalSerializationApi
 class LoginFragment : BaseFragment(R.layout.login_fragment) {
@@ -21,9 +25,10 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
     private lateinit var user: UserResponse
     private lateinit var binding: LoginFragmentBinding
 
-    private val githubUtils: GithubUtils by lazy {
-        GithubUtils()
-    }
+    @Inject
+    lateinit var githubUtils: GithubUtils
+    @Inject
+    lateinit var githubLoginUtils: GitHubLoginUtils
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,16 +47,17 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
     }
 
     private fun startGitHubLogin() {
-        val authIntent = Intent(Intent.ACTION_VIEW, githubUtils.buildAuthGitHubUrl())
+        val authIntent = Intent(Intent.ACTION_VIEW, githubLoginUtils.buildAuthGitHubUrl())
         startActivity(authIntent)
     }
 
     private fun saveUserToken(code: String) {
         GlobalScope.launch {
-            val response = githubUtils.getAccessToken(code)
+            val response = githubLoginUtils.getAccessToken(code)
             val token = "${response.tokenType} ${response.accessToken}"
             sharedPreferences.token = token
-            user = githubUtils.getUser(token).successResult
+            Log.d("tagss", "saveUserToken: ${sharedPreferences.token}")
+            user = githubUtils.getUser().successResult
             saveUserToSharedPreference()
             navigator.showUserInfoFragment(user, addToBackStack = false)
             requireActivity().intent.data = null
@@ -59,13 +65,13 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
     }
 
     private fun saveUserToSharedPreference() {
-        sharedPreferences.localUserName = user.login
-        sharedPreferences.localUserAvatarUrl = user.avatarUrl
+        sharedPreferences.localUserName = user.login.toString()
+        sharedPreferences.localUserAvatarUrl = user.avatarUrl.toString()
     }
 
     override fun onResume() {
         super.onResume()
-        val code = githubUtils.getCodeFromUri(uri = requireActivity().intent.data)
+        val code = githubLoginUtils.getCodeFromUri(uri = requireActivity().intent.data)
         code ?: return
         saveUserToken(code)
     }
@@ -76,6 +82,10 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
         binding.tvErrorMessage.text = getString(errorRes)
     }
 
+    override fun setupDi() {
+        val app = requireActivity().application as Application
+        app.getComponent().inject(this)
+    }
 
     companion object {
         fun newInstance(): LoginFragment = LoginFragment()

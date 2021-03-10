@@ -5,5 +5,5 @@ import java.io.Serializable
 
 data class SearchResponse(
     @SerializedName("items")
-    val usersList: List<UserResponse>
+    val usersList: List<UserResponse>?
 ) : Serializable

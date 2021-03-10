@@ -4,8 +4,14 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
 import com.pmacademy.githubclient.data.model.IssueResponse
 import com.pmacademy.githubclient.data.model.UserResponse
-import com.pmacademy.githubclient.ui.fragments.*
+import com.pmacademy.githubclient.ui.screens.issueinfo.IssueInfoFragment
+import com.pmacademy.githubclient.ui.screens.login.LoginFragment
+import com.pmacademy.githubclient.ui.screens.repoinfo.RepoInfoFragment
+import com.pmacademy.githubclient.ui.screens.search.UsersSearchFragment
+import com.pmacademy.githubclient.ui.screens.userinfo.UserInfoFragment
 import kotlinx.serialization.ExperimentalSerializationApi
+
+data class IssueInfo(val issue: IssueResponse, val userName: String, val repoName: String)
 
 @ExperimentalSerializationApi
 class FragmentNavigator(
@@ -13,18 +19,14 @@ class FragmentNavigator(
     @IdRes private val container: Int,
 ) {
 
-    fun showIssueInfoFragment(
-        issue: IssueResponse,
-        userName: String,
-        repoName: String
-    ) {
+    fun showIssueInfoFragment(issueInfo: IssueInfo) {
         fragmentManager.beginTransaction()
             .replace(
                 container,
                 IssueInfoFragment.newInstance(
-                    issue = issue,
-                    userName = userName,
-                    repoName = repoName
+                    issue = issueInfo.issue,
+                    userName = issueInfo.userName,
+                    repoName = issueInfo.repoName
                 )
             )
             .addToBackStack(null)
@@ -39,7 +41,7 @@ class FragmentNavigator(
 
     fun showProjectInfoFragment(reposName: String, userName: String) {
         fragmentManager.beginTransaction()
-            .replace(container, ReposInfoFragment.newInstance(reposName, userName))
+            .replace(container, RepoInfoFragment.newInstance(reposName, userName))
             .addToBackStack(null)
             .commit()
     }

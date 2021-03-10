@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ReposResponse(
     @SerializedName("name")
-    val name: String,
+    val name: String?,
     @SerializedName("id")
-    val id: Int
+    val id: Int?
 )

@@ -1,4 +1,4 @@
-package com.pmacademy.githubclient.ui.adapter
+package com.pmacademy.githubclient.ui.screens.userinfo.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +12,11 @@ import com.pmacademy.myapplicationtemp.data.ReposResponse
 
 private class RepoItemDiffCallback : DiffUtil.ItemCallback<ReposResponse>() {
     override fun areItemsTheSame(oldItem: ReposResponse, newItem: ReposResponse): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: ReposResponse, newItem: ReposResponse): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem == newItem
     }
 }
 
@@ -49,7 +49,7 @@ class ReposListAdapter(private val reposClickListener: (String) -> Unit) :
         fun bind(reposItem: ReposResponse, onReposClick: (String) -> Unit) {
             tvReposName?.text = reposItem.name
             itemView.setOnClickListener {
-                onReposClick.invoke(reposItem.name)
+                reposItem.name?.let { name -> onReposClick.invoke(name) }
             }
         }
     }
