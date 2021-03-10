@@ -60,8 +60,8 @@ class LoginFragment : BaseFragment(R.layout.login_fragment) {
     }
 
     private fun saveUserToSharedPreference() {
-        sharedPreferences.localUserName = user.login
-        sharedPreferences.localUserAvatarUrl = user.avatarUrl
+        sharedPreferences.localUserName = user.login.toString()
+        sharedPreferences.localUserAvatarUrl = user.avatarUrl.toString()
     }
 
     override fun onResume() {

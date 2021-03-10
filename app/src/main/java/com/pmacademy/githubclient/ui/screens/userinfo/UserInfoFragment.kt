@@ -21,7 +21,11 @@ import javax.inject.Inject
 class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
 
     private val rvPostsAdapter =
-        ReposListAdapter { reposName -> navigator.showProjectInfoFragment(reposName, user.login) }
+        ReposListAdapter { reposName ->
+            user.login?.let { login ->
+                navigator.showProjectInfoFragment(reposName, login)
+            }
+        }
     private lateinit var binding: UserInfoFragmentBinding
 
     @Inject
@@ -83,7 +87,7 @@ class UserInfoFragment : BaseFragment(R.layout.user_info_fragment) {
             if (reposList.isError) {
                 handleError(reposList.errorResult)
             } else {
-                loadAvatar(user.avatarUrl)
+                user.avatarUrl?.let { avatarUrl -> loadAvatar(avatarUrl) }
                 showAllViewsHideProgressBar()
                 updateReposList(reposList.successResult)
             }

@@ -54,11 +54,13 @@ class IssueInfoFragment : BaseFragment(R.layout.issue_info_fragment) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         observeIssueCommentsLiveData()
-        viewModel.getIssueComments(
-            userName = userName,
-            repoName = repoName,
-            issueNumber = issue.number
-        )
+        issue.number?.let {
+            viewModel.getIssueComments(
+                userName = userName,
+                repoName = repoName,
+                issueNumber = it
+            )
+        }
         setupView()
     }
 

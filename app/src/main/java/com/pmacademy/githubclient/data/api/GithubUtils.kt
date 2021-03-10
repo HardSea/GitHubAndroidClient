@@ -120,8 +120,12 @@ class GithubUtils @Inject constructor(private val sharedPrefs: SharedPref) {
                 owner = owner,
                 repo = repo
             )
-            val encodeReadme = StringDecoder().decodeText(readme.content, readme.encoding)
-            return Result.success(encodeReadme)
+            if (readme.content != null && readme.encoding != null) {
+                val encodeReadme = StringDecoder().decodeText(readme.content, readme.encoding)
+                return Result.success(encodeReadme)
+            } else {
+                Result.success("")
+            }
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }
@@ -182,11 +186,12 @@ class GithubUtils @Inject constructor(private val sharedPrefs: SharedPref) {
         userName: String
     ): Result<List<UserResponse>, GithubError> {
         return try {
-            Result.success(
-                apiGithubService.getUsersSearch(
-                    q = userName
-                ).usersList
-            )
+            val userList = apiGithubService.getUsersSearch(q = userName).usersList
+            if (userList != null) {
+                Result.success(userList)
+            } else {
+                Result.success(listOf())
+            }
         } catch (e: Exception) {
             githubInterceptor.getError(e)
         }

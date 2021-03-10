@@ -49,7 +49,7 @@ class ReposListAdapter(private val reposClickListener: (String) -> Unit) :
         fun bind(reposItem: ReposResponse, onReposClick: (String) -> Unit) {
             tvReposName?.text = reposItem.name
             itemView.setOnClickListener {
-                onReposClick.invoke(reposItem.name)
+                reposItem.name?.let { name -> onReposClick.invoke(name) }
             }
         }
     }

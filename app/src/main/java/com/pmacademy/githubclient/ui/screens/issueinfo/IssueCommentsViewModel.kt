@@ -52,12 +52,14 @@ class IssueCommentsViewModel @Inject constructor(private val githubUtils: Github
         clickType: ReactionType
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = githubUtils.createReactionForIssueComment(
-                owner = userName,
-                repo = repoName,
-                commentId = commentResponse.id,
-                clickType = clickType
-            )
+            val result = commentResponse.id?.let { commentId ->
+                githubUtils.createReactionForIssueComment(
+                    owner = userName,
+                    repo = repoName,
+                    commentId = commentId,
+                    clickType = clickType
+                )
+            }
             withContext(Dispatchers.Main) {
                 _createReactionResultLiveData.value = result
             }

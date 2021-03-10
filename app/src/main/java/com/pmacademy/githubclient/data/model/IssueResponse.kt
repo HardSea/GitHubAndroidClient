@@ -5,11 +5,11 @@ import java.io.Serializable
 
 data class IssueResponse(
     @SerializedName("user")
-    val author: UserResponse,
+    val author: UserResponse?,
     @SerializedName("title")
-    val title: String,
+    val title: String?,
     @SerializedName("body")
-    val body: String,
+    val body: String?,
     @SerializedName("number")
-    val number: Int
+    val number: Int?
 ) : Serializable

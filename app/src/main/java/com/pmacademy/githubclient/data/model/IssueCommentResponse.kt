@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class IssueCommentResponse(
     @SerializedName("id")
-    val id: Int,
+    val id: Int?,
     @SerializedName("body")
-    val body: String,
+    val body: String?,
     @SerializedName("user")
-    val user: UserResponse,
+    val user: UserResponse?,
 )
