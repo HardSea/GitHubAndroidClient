@@ -2,8 +2,8 @@
 This program has a user search with the ability to view their repositories. You can see information about the repository, its contributors, and a list of its issues. You can see the repository issue information, read his comments, and leave your reaction to the comment.
 ## Contributors:
 
-* [Artem Razvii](https://github.com/HardSea)
-* [Gleb Shymko](https://github.com/ShymkoGleb)
+* [Artem](https://github.com/HardSea)
+* [Gleb](https://github.com/ShymkoGleb)
 
 ## Languages, libraries and tools used
 
